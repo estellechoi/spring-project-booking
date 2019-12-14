@@ -23,6 +23,11 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
+	public int getCountByCategory(String categoryName) {
+		return productDao.selectCountByCategory(categoryName);
+	}
+
+	@Override
 	@Transactional
 	public List<ProductDisplayFile> getProducts(Integer start) {
 		List<ProductDisplayFile> list = productDao.selectAll(start, ProductService.LIMIT);
@@ -30,6 +35,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
+	@Transactional
 	public List<ProductDisplayFile> getProductsByCategory(String categoryName, Integer start) {
 		List<ProductDisplayFile> list = productDao.selectByCategory(categoryName, start, ProductService.LIMIT);
 		return list;

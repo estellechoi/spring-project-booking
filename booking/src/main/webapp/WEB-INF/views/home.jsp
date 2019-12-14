@@ -249,8 +249,8 @@
 		// 더보기 버튼 숨기기
 		function controlBtnShowmore(countPage) {
 			var btnShowmore = document.querySelectorAll(".btn-showmore");
-			// countPage : 첫번째 페이지 포함
-			// btnShowmore.length : 첫번째 페이지 불포
+			// countPage : 첫번째 페이지 포함 3
+			// btnShowmore.length : 첫번째 페이지 불포 2
 			if (countPage <= btnShowmore.length) {
 				// 더보기 버튼 보이기
 				btnShowmore[countPage - 1].style.display = "flex";

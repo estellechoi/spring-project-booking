@@ -1,8 +1,9 @@
 package com.youjin.booking.dao;
 
 import static com.youjin.booking.dao.ProductDaoSqls.SELECT_ALL_LIMIT;
-import static com.youjin.booking.dao.ProductDaoSqls.SELECT_COUNT;
 import static com.youjin.booking.dao.ProductDaoSqls.SELECT_BY_CATEGORY;
+import static com.youjin.booking.dao.ProductDaoSqls.SELECT_COUNT;
+import static com.youjin.booking.dao.ProductDaoSqls.SELECT_COUNT_BY_CATEGORY;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,7 +17,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.youjin.booking.dto.Product;
 import com.youjin.booking.dto.ProductDisplayFile;
 
 @Repository
@@ -34,6 +34,12 @@ public class ProductDao {
 	public int selectCount() {
 		Map<String, ?> paramMap = Collections.emptyMap();
 		return template.queryForObject(SELECT_COUNT, paramMap, Integer.class);
+	}
+	
+	public int selectCountByCategory(String categoryName) {
+		Map<String, String> paramMap = new HashMap<>();
+		paramMap.put("categoryName", categoryName);
+		return template.queryForObject(SELECT_COUNT_BY_CATEGORY, paramMap, Integer.class);
 	}
 	
 	// 모든 상품 불러오기 (limit 개수씩 불러오기)

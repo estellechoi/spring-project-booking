@@ -25,18 +25,23 @@ public class HomeRestController {
 	@Autowired
 	ProductService productService;
 
-	// 더보기 
+	// ajax (탭 메뉴, 더보기 버튼)
 	@GetMapping(path = "/home/{category}")
 	public Map<String, Object> home(
 			@RequestParam(name = "start", required = false, defaultValue = "0") int start,
-			@PathVariable(name = "category") String category) {
+			@PathVariable(name = "category") String categoryName) {
 		
 		List<ProductDisplayFile> listProduct = null;
 		int count = 0;
-		if (category.equals("전체리스트")) {
-			listProduct = productService.getProducts(start);			
+		
+		if (categoryName.equals("전체리스트")) {
+			listProduct = productService.getProducts(start);		
 			// 전체 상품의 수
 			count = productService.getCount();
+		}
+		else {
+			listProduct = productService.getProductsByCategory(categoryName, start);
+			count = productService.getCountByCategory(categoryName);
 		}
 		
 		// 페이지 수
@@ -53,10 +58,10 @@ public class HomeRestController {
 
 		
 		Map<String, Object> map = new HashMap<>();
-		System.out.println(listProduct.get(0).getDescription());
-		System.out.println(listProduct.get(1).getDescription());
-		System.out.println(listProduct.get(2).getDescription());
-		System.out.println(listProduct.get(3).getDescription());
+		for (int i = 0; i<listProduct.size(); i++) {
+			System.out.println(listProduct.get(i).getDescription());			
+		}
+		System.out.println(listPageStartIndex.size());
 		map.put("listProduct", listProduct);
 		map.put("listPageStartIndex", listPageStartIndex);
 		return map;
