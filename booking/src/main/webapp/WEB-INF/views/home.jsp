@@ -7,7 +7,17 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
-
+	@font-face {
+	    font-family: NanumGothicWebR;
+	    font-style: normal;
+	    font-weight: 400;
+	    src: url('/booking/font/NanumGothicRegular.woff') format('woff')
+	}
+	
+	body, header, section, div {
+		font-family: NanumGothicWebR;
+	}
+	
 	body {
 		background: #444444;
 		margin: 0;
@@ -21,7 +31,7 @@
 	
 	#gnb {
 		height: 50px;
-		background: green;
+		background: #5ECB6B;
 	}
 	/* 고정된 컨테이너 */
 	#promotion-container {
@@ -52,8 +62,9 @@
 	#tab-menu {
 		background: white;
 		text-align: center;
+		height: 50px;
 	}
-	#tab-menu > div {
+	#tab-menu > .categories {
 		height: 50px;
 		display: inline-block;
 		line-height: 50px;
@@ -63,8 +74,14 @@
 		margin-right: 10px;
 		margin-left: 10px;
 		cursor: pointer;
-		font-size: 13px;
-		font-weight: bold;
+		font-size: 15px;
+		font-weight: 600;
+		color: #4c4c4c;
+	}
+	
+	#tab-menu > .categories:nth-child(1) {
+ 		color: #5ECB6B;
+ 		border-bottom: 3px solid #5ECB6B;		
 	}
 	
 	#tab-count {
@@ -162,13 +179,13 @@
 		<div id="tab-container">
 			<!-- lnb : local nav bar -->
 			<div id="tab-menu">
-				<div class="category-entire">전체리스트</div>
+				<div class="categories">전체리스트</div>
 				<c:forEach items="${listCategory}" var="category">
 					<div class="categories">${category.name}</div>
 				</c:forEach>
 			</div>
 			<div id="tab-count">
-				바로 예매 가능한 행사가 <span style="color: red">&nbsp;${count}개&nbsp;</span> 있습니다.
+				바로 예매 가능한 행사가 &nbsp;<span id="count-result" style="color: red">${count}개</span>&nbsp; 있습니다.
 			</div>
 			<section id="tab-content-container">
 				<c:forEach items="${listProduct}" var="product" varStatus="status">
@@ -189,6 +206,9 @@
 		</div>
 	</div>
 	<!-- html template -->
+	<script type="text/template" id="template-categories">
+		<div class="categories">{categoryName}</div>
+	</script>
 	<script type="text/template" id="template-tabcontent">
 		<div class="tab-content">
 			<img src="{saveFileName}" alt="no image" /><br />
@@ -209,8 +229,7 @@
 		var countPromotion = 0;
 		// 탭 멤버
 		const tabMenu = document.querySelector("#tab-menu");
-// 		const tabContainer = document.querySelector("#tab-content-container");
-// 		const btnContainer = document.querySelector("#btn-container");
+		const categories = document.querySelectorAll(".categories");
 		var countPage = 1;
 		// html template
 		var templateTabContent = document.querySelector("#template-tabcontent").innerHTML;
@@ -221,9 +240,11 @@
 		// 함수 호출
 		window.addEventListener("DOMContentLoaded", slidePromotion);
 		window.addEventListener("DOMContentLoaded", controlBtnShowmore(countPage));
+		window.addEventListener("DOMContentLoaded", showAjax(0, '전체리스트'));
 		btnTop.addEventListener("click", goTop);
 		tabMenu.addEventListener("click", function(evt) {
 			showAjax(0, evt.target.innerText);
+			makeTabColored(evt.target.innerText);
 		});
 				
 		// setTimeout을 하는 순간 호출 스택에 함수가 쌓이는 게 아니라 백그라운드를 거쳐 태스크 큐로 넘어가기 때문에 호출 스택이 터지는 일이 발생하지 않습니다.
@@ -231,11 +252,7 @@
 				setTimeout(function(){
 					var preX = parseInt(promotion.style.left);
 					promotion.style.left = (preX - 600) + "px";
-					countPromotion++;					
-					// const movingChild = promotion.firstChild;
-					// promotion.removeChild(movingChild);
-					// promotion.appendChild(movingChild);
-					
+					countPromotion++;										
 					// 마지막 이미지일 때
 					if (countPromotion >= promotionImgs.length - 1) {
 						promotion.style.left = 0;
@@ -246,17 +263,28 @@
 				}, 2000);
  		}
 		
+		// 클릭한 탭 색상 표시하기
+		function makeTabColored(clickedMenu) {
+			categories.forEach(function(category) {
+				if (category.innerText === clickedMenu) {
+					category.style.color = "#5ECB6B";
+					category.style.borderBottom = "3px solid #5ECB6B";
+				}
+				else {
+					category.style.color = "#4c4c4c";
+					category.style.borderBottom = "none";					
+				}
+			});
+		}
+		
 		// 더보기 버튼 숨기기
 		function controlBtnShowmore(countPage) {
 			var btnShowmore = document.querySelectorAll(".btn-showmore");
 			// countPage : 첫번째 페이지 포함 3
 			// btnShowmore.length : 첫번째 페이지 불포 2
 			if (countPage <= btnShowmore.length) {
-				// 더보기 버튼 보이기
 				btnShowmore[countPage - 1].style.display = "flex";
 			}
-
-			// 버튼 숨기기 (2 페이지부터)
 			if (countPage >= 2) {
 				btnShowmore[countPage - 2].style.display = "none";				
 			}
@@ -267,7 +295,7 @@
 			document.documentElement.scrollTop = 0;
 		}
 		
-		// 전체리스트 AJAX
+		// AJAX
 		function showAjax(start, clickedMenu) {			
 			var oReq = new XMLHttpRequest();
 			oReq.addEventListener("load", function() {
@@ -280,36 +308,24 @@
 		}
 
 		function template(jsonObj, start, clickedMenu) {
+// 			var listCategory = jsonObj["listCategory"];
+			var count = jsonObj["count"];
 			var listProduct = jsonObj["listProduct"];
 			var listPageStartIndex = jsonObj["listPageStartIndex"];
 			var tabContentContainer = document.querySelector("#tab-content-container");
-			var btnContainer = document.querySelector("#btn-container");
-			// 탭메뉴 클릭시
 			if (start === 0) {
-				// 탭, 버튼 초기화
-				tabContentContainer.innerHTML = "";				
-				btnContainer.innerHTML = "";
-				// 카테고리별 페이지수에 맞추어 더보기 버튼 생성
-				var resultHTML = "";
-				listPageStartIndex.forEach(function(index) {
-					if (index !== 0) {
-						var resultTemplate = templateBtn.replace("{pageStartIndex}", index)
-														.replace("{clickedMenu}", clickedMenu);
-						resultHTML += resultTemplate;						
-					}
-				});				
-				btnContainer.insertAdjacentHTML("beforeend", resultHTML);
+				tabContentContainer.innerHTML = "";
+				getCount(count);
+				btnTemplate(listPageStartIndex, clickedMenu);
 				// 페이지, 버튼 보이기 숨기기 초기화
 				countPage = 1;
 				controlBtnShowmore(countPage);
 			}
-			// 더보기 클릭시
 			else {
 				// 페이지 수 카운트, 버튼 보이기 숨기기 컨트롤
 				countPage++;
 				controlBtnShowmore(countPage);				
-			}
-			
+			}						
 			// listProduct : ProductDisplayFile 객체를 요소로 하는 배열
 			var resultHTML = "";
 			listProduct.forEach(function(objValue) {
@@ -319,8 +335,44 @@
 									 				   .replace("{content}", objValue["content"]);
 				resultHTML += resultTemplate;
 			});
-
 			tabContentContainer.insertAdjacentHTML("beforeend", resultHTML);		
+		}
+
+		// 탭마다 더보기 버튼 얻어오기
+		function btnTemplate(listPageStartIndex, clickedMenu) {
+			// 초기화
+			var btnContainer = document.querySelector("#btn-container");
+			btnContainer.innerHTML = "";
+			// 카테고리별 페이지수에 맞추어 더보기 버튼 생성
+			var resultHTML = "";
+			listPageStartIndex.forEach(function(index) {
+				if (index !== 0) {
+					var resultTemplate = templateBtn.replace("{pageStartIndex}", index)
+													.replace("{clickedMenu}", clickedMenu);
+					resultHTML += resultTemplate;						
+				}
+			});				
+			btnContainer.insertAdjacentHTML("beforeend", resultHTML);				
+		}		
+		
+		function getCount(count) {
+			var countResult = document.querySelector("#count-result");
+			countResult.innerText = count + "개";
+		}
+
+		// 카테고리 ajax 보류 .. (카테고리를 꼭 비동기 처리해야 할까 ..?)
+		function getCategories(listCategory) {
+			// 카테고리 초기화
+			document.querySelector("#tab-menu").innerHTML = "<div class='categories'>전체리스트</div>";
+			
+			// 카테고리 template
+			const templateCategories = document.querySelector("#template-categories").innerHTML;
+			var resultHTML = "";
+			listCategory.forEach(function(ObjValue, index) {
+				var resultTemplate = templateCategories.replace("{categoryName}", ObjValue["name"]);
+				resultHTML += resultTemplate;
+			});
+			document.querySelector("#tab-menu").insertAdjacentHTML("beforeend", resultHTML);		
 		}
 		
 	</script>

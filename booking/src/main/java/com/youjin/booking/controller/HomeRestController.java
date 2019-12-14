@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.youjin.booking.dto.Category;
 import com.youjin.booking.dto.ProductDisplayFile;
+import com.youjin.booking.service.CategoryService;
 import com.youjin.booking.service.ProductService;
 
 // @RestController = @Controller + @ResponseBody
@@ -24,6 +26,8 @@ public class HomeRestController {
 
 	@Autowired
 	ProductService productService;
+	@Autowired
+	CategoryService categoryService;
 
 	// ajax (탭 메뉴, 더보기 버튼)
 	@GetMapping(path = "/home/{category}")
@@ -33,6 +37,7 @@ public class HomeRestController {
 		
 		List<ProductDisplayFile> listProduct = null;
 		int count = 0;
+		List<Category> listCategory = categoryService.getCategories();
 		
 		if (categoryName.equals("전체리스트")) {
 			listProduct = productService.getProducts(start);		
@@ -62,6 +67,9 @@ public class HomeRestController {
 			System.out.println(listProduct.get(i).getDescription());			
 		}
 		System.out.println(listPageStartIndex.size());
+		System.out.println(count);
+		map.put("listCategory", listCategory);
+		map.put("count", count);
 		map.put("listProduct", listProduct);
 		map.put("listPageStartIndex", listPageStartIndex);
 		return map;
