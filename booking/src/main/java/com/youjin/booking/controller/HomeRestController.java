@@ -1,11 +1,13 @@
 package com.youjin.booking.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,17 +25,40 @@ public class HomeRestController {
 	@Autowired
 	ProductService productService;
 
-	@GetMapping(path = "/home")
+	// 더보기 
+	@GetMapping(path = "/home/{category}")
 	public Map<String, Object> home(
-			@RequestParam(name = "start", required = false, defaultValue = "0") int start) {
-		List<ProductDisplayFile> list = productService.getProducts(start);
+			@RequestParam(name = "start", required = false, defaultValue = "0") int start,
+			@PathVariable(name = "category") String category) {
+		
+		List<ProductDisplayFile> listProduct = null;
+		int count = 0;
+		if (category.equals("전체리스트")) {
+			listProduct = productService.getProducts(start);			
+			// 전체 상품의 수
+			count = productService.getCount();
+		}
+		
+		// 페이지 수
+		int pageCount = count / productService.LIMIT;
+		if (count % productService.LIMIT > 0) {
+			pageCount++;
+		}
+
+		// 페이지 수만큼 start index 를 리스트로 저장
+		List<Integer> listPageStartIndex = new ArrayList<>();
+		for (int i = 0; i < pageCount; i++) {
+			listPageStartIndex.add(i * productService.LIMIT);
+		}
+
 		
 		Map<String, Object> map = new HashMap<>();
-		System.out.println(list.get(0).getDescription());
-		System.out.println(list.get(1).getDescription());
-		System.out.println(list.get(2).getDescription());
-		System.out.println(list.get(3).getDescription());
-		map.put("listProduct", list);
+		System.out.println(listProduct.get(0).getDescription());
+		System.out.println(listProduct.get(1).getDescription());
+		System.out.println(listProduct.get(2).getDescription());
+		System.out.println(listProduct.get(3).getDescription());
+		map.put("listProduct", listProduct);
+		map.put("listPageStartIndex", listPageStartIndex);
 		return map;
 		// 반환된 map 은 JSON으로 변환하는 메시지 컨버터에 의해 json 포맷 문자열로 변환
 	}

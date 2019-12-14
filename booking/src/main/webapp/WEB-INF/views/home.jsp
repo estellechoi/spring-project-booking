@@ -38,7 +38,7 @@
 		position: absolute;
 		top: 0px;
 		display: flex;
- 		transition: all 1s ease-out;
+ 		transition: all 2s ease-out;
 	}	
 	/* 그 안의 이미지들 */
 	#promotion > img {
@@ -162,9 +162,9 @@
 		<div id="tab-container">
 			<!-- lnb : local nav bar -->
 			<div id="tab-menu">
-				<div>전체리스트</div>
+				<div class="category-entire">전체리스트</div>
 				<c:forEach items="${listCategory}" var="category">
-					<div>${category.name}</div>
+					<div class="categories">${category.name}</div>
 				</c:forEach>
 			</div>
 			<div id="tab-count">
@@ -180,14 +180,16 @@
 					</div>
 				</c:forEach>
 			</section>
-			<c:forEach items="${listPageStartIndex}" begin="1" var="pageStartIndex">
-				<input class="btn-showmore" type="button" value="더보기" onclick="showMore(${pageStartIndex})"/>			
-			</c:forEach>
-				<input id="btn-top" type="button" value="TOP" />
+			<div id="btn-container">
+				<c:forEach items="${listPageStartIndex}" begin="1" var="pageStartIndex">
+					<input class="btn-showmore" type="button" value="더보기" onclick="showAjax(${pageStartIndex}, '전체리스트')"/>			
+				</c:forEach>
+			</div>
+			<input id="btn-top" type="button" value="TOP" />
 		</div>
 	</div>
 	<!-- html template -->
-	<script type="text/template" id="html-template">
+	<script type="text/template" id="template-tabcontent">
 		<div class="tab-content">
 			<img src="{saveFileName}" alt="no image" /><br />
 			<h3>{description}</h3>
@@ -195,23 +197,34 @@
 			<p class="product-content">{content}</p>
 		</div>
 	</script>
+	<script type="text/template" id="template-btn">
+		<input class="btn-showmore" type="button" value="더보기" onclick="showAjax({pageStartIndex}, '{clickedMenu}')"/>		
+	</script>
 	<!-- javascript -->
 	<script>
 	
-		// 멤버 선언
+		// 프로모션 멤버
 		const promotion = document.querySelector("#promotion");
 		const promotionImgs = document.querySelectorAll(".promotion-img");
 		var countPromotion = 0;
-		const tabContainer = document.querySelector("#tab-content-container");
-		const btnShowmore = document.querySelectorAll(".btn-showmore");
-		var template = document.querySelector("#html-template").innerHTML;
+		// 탭 멤버
+		const tabMenu = document.querySelector("#tab-menu");
+// 		const tabContainer = document.querySelector("#tab-content-container");
+// 		const btnContainer = document.querySelector("#btn-container");
 		var countPage = 1;
+		// html template
+		var templateTabContent = document.querySelector("#template-tabcontent").innerHTML;
+		var templateBtn = document.querySelector("#template-btn").innerHTML;
+		// TOP 버튼
 		const btnTop = document.querySelector("#btn-top");
 		
 		// 함수 호출
 		window.addEventListener("DOMContentLoaded", slidePromotion);
 		window.addEventListener("DOMContentLoaded", controlBtnShowmore(countPage));
 		btnTop.addEventListener("click", goTop);
+		tabMenu.addEventListener("click", function(evt) {
+			showAjax(0, evt.target.innerText);
+		});
 				
 		// setTimeout을 하는 순간 호출 스택에 함수가 쌓이는 게 아니라 백그라운드를 거쳐 태스크 큐로 넘어가기 때문에 호출 스택이 터지는 일이 발생하지 않습니다.
 		function slidePromotion() {
@@ -230,11 +243,12 @@
 					}
 					// 재귀 호출
 					slidePromotion();					
-				}, 1000);
+				}, 2000);
  		}
 		
 		// 더보기 버튼 숨기기
 		function controlBtnShowmore(countPage) {
+			var btnShowmore = document.querySelectorAll(".btn-showmore");
 			// countPage : 첫번째 페이지 포함
 			// btnShowmore.length : 첫번째 페이지 불포
 			if (countPage <= btnShowmore.length) {
@@ -253,37 +267,60 @@
 			document.documentElement.scrollTop = 0;
 		}
 		
-		// 상품 더보기 AJAX
-		function showMore(start) {			
+		// 전체리스트 AJAX
+		function showAjax(start, clickedMenu) {			
 			var oReq = new XMLHttpRequest();
 			oReq.addEventListener("load", function() {
 				// json 포맷 문자열 응답결과를 json 객체로 변환 (서버 Map -> json 객체)
 				var jsonObj = JSON.parse(this.responseText);
-				var jsonArray = jsonObj["listProduct"];
-				fillTemplate(jsonArray);
+				template(jsonObj, start, clickedMenu);
 			});
-			
-			oReq.open("GET", "./json/home?start=" + start);
+			oReq.open("GET", "./json/home/" + clickedMenu + "?start=" + start);				
 			oReq.send();
 		}
-		
-		function fillTemplate(jsonArray) {
+
+		function template(jsonObj, start, clickedMenu) {
+			var listProduct = jsonObj["listProduct"];
+			var listPageStartIndex = jsonObj["listPageStartIndex"];
 			var tabContentContainer = document.querySelector("#tab-content-container");
-			// jsonArray : ProductDisplayFile 객체를 요소로 하는 배열
-			var result = "";
-			jsonArray.forEach(function(objValue) {
-				var resultTemplate = template.replace("{saveFileName}", objValue["saveFileName"])
-									 .replace("{description}", objValue["description"])
-									 .replace("{placeName}", objValue["placeName"])
-									 .replace("{content}", objValue["content"]);
-				result += resultTemplate;
-			});
+			var btnContainer = document.querySelector("#btn-container");
+			// 탭메뉴 클릭시
+			if (start === 0) {
+				// 탭, 버튼 초기화
+				tabContentContainer.innerHTML = "";				
+				btnContainer.innerHTML = "";
+				// 카테고리별 페이지수에 맞추어 더보기 버튼 생성
+				var resultHTML = "";
+				listPageStartIndex.forEach(function(index) {
+					if (index !== 0) {
+						var resultTemplate = templateBtn.replace("{pageStartIndex}", index)
+														.replace("{clickedMenu}", clickedMenu);
+						resultHTML += resultTemplate;						
+					}
+				});				
+				btnContainer.insertAdjacentHTML("beforeend", resultHTML);
+				// 페이지, 버튼 보이기 숨기기 초기화
+				countPage = 1;
+				controlBtnShowmore(countPage);
+			}
+			// 더보기 클릭시
+			else {
+				// 페이지 수 카운트, 버튼 보이기 숨기기 컨트롤
+				countPage++;
+				controlBtnShowmore(countPage);				
+			}
 			
-			// 특정 요소 전/후로 HTML 더하기
-			tabContentContainer.insertAdjacentHTML("beforeend", result);
-			// 페이지 수 카운트
-			countPage++;
-			controlBtnShowmore(countPage);
+			// listProduct : ProductDisplayFile 객체를 요소로 하는 배열
+			var resultHTML = "";
+			listProduct.forEach(function(objValue) {
+				var resultTemplate = templateTabContent.replace("{saveFileName}", objValue["saveFileName"])
+									 				   .replace("{description}", objValue["description"])
+									 				   .replace("{placeName}", objValue["placeName"])
+									 				   .replace("{content}", objValue["content"]);
+				resultHTML += resultTemplate;
+			});
+
+			tabContentContainer.insertAdjacentHTML("beforeend", resultHTML);		
 		}
 		
 	</script>
