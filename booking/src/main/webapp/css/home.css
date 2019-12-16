@@ -22,10 +22,6 @@
 	width: 600px;
 }
 
-#tab-container {
-	text-align: center;
-}
-
 #tab-menu {
 	background: white;
 	text-align: center;
@@ -65,17 +61,12 @@
 #tab-content-container {
 	margin: 0;
 	padding: 0;
-	display: inline-flex;
-	/*   		flex-direction: row; */
-	/* 줄바꿈 가능 */
-	flex-wrap: wrap;
-	/*   		flex-flow: row wrap; */
-	justify-content: space-around;
+	display: flex;
+	justify-content: center;
 	align-items: flex-start;
 }
 
 .tab-content {
-	/* 		align-self: baseline; */
 	margin: 5px;
 	flex: none;
 	text-align: center;

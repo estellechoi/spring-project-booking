@@ -64,22 +64,32 @@ function sendJson(jsonObj, start, clickedMenu) {
 }
 
 function getContentTemplate(listProduct, start) {
-	// 왜 null ????
 	var tabContentContainer = document.querySelector("#tab-content-container");
+	var contentLeft = document.querySelector("#content-left");
+	var contentRight = document.querySelector("#content-right");
 	if (start === 0) {
-		tabContentContainer.innerHTML = "";
+		contentLeft.innerHTML = "";
+		contentRight.innerHTML = "";
 	}
 	// listProduct : ProductDisplayFile 객체를 요소로 하는 배열
-	var resultHTML = "";
-	listProduct.forEach(function(product) {
+	var resultLeft = "";
+	var resultRight = "";
+	listProduct.forEach(function(product, i) {
 		var resultTpl = templateTabContent.replace("{saveFileName}", product["saveFileName"])
 										  .replace("{description}", product["description"])
 										  .replace("{placeName}", product["placeName"])
 										  .replace("{content}", product["content"])
 										  .replace("{id}",product["id"]);
-		resultHTML += resultTpl;
+		if (i % 2 == 0) {
+			resultLeft += resultTpl;			
+		}
+		else {
+			resultRight += resultTpl;
+		}
 	});
-	tabContentContainer.insertAdjacentHTML("beforeend", resultHTML);
+//	tabContentContainer.insertAdjacentHTML("beforeend", resultHTML);
+	contentLeft.insertAdjacentHTML("beforeend", resultLeft);
+	contentRight.insertAdjacentHTML("beforeend", resultRight);
 }
 
 // 탭마다 더보기 버튼 얻어오기

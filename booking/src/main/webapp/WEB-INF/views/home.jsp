@@ -16,6 +16,7 @@
 			<div id="logo">예약</div>
 			<div id="user-email">eeee@naver.com</div>
 		</header>
+		
 		<section id="promotion-container">
 			<div id="promotion" style="left:0px">
 				<c:forEach items="${listPromotion}" var="promotion">
@@ -23,23 +24,26 @@
 				</c:forEach>
 			</div>
 		</section>
-		<!-- tab ui -->
-		<section id="tab-container">
-			<!-- lnb : local nav bar -->
-			<div id="tab-menu">
-				<div class="categories">전체리스트</div>
-				<c:forEach items="${listCategory}" var="category">
-					<div class="categories">${category.name}</div>
-				</c:forEach>
-					<script type="text/template" id="template-categories">
-						<div class="categories">{categoryName}</div>
-					</script>
-			</div>
-			<div id="tab-count">
-				바로 예매 가능한 행사가 &nbsp;<span id="count-result" style="color: red">${count}개</span>&nbsp; 있습니다.
-			</div>
-			<section id="tab-content-container">
-				<script type="text/template" id="template-tabcontent">
+		
+		<!-- lnb : local nav bar -->
+		<nav id="tab-menu">
+			<div class="categories">전체리스트</div>
+			<c:forEach items="${listCategory}" var="category">
+				<div class="categories">${category.name}</div>
+			</c:forEach>
+			<script type="text/template" id="template-categories">
+				<div class="categories">{categoryName}</div>
+			</script>
+		</nav>
+		
+		<section id="tab-count">
+			바로 예매 가능한 행사가 &nbsp;<span id="count-result" style="color: red">${count}개</span>&nbsp; 있습니다.
+		</section>
+		
+		<section id="tab-content-container">
+			<article id="content-left"></article>
+			<article id="content-right"></article>
+			<script type="text/template" id="template-tabcontent">
 					<div class="tab-content" data-value="{id}">
 						<img src="{saveFileName}" alt="no image" />
 						<br />
@@ -47,8 +51,7 @@
 						<h4>{placeName}</h4>
 						<p class="product-content">{content}</p>
 					</div>
-				</script>
-			</section>
+			</script>
 		</section>
 		
 		<div id="btn-container">
