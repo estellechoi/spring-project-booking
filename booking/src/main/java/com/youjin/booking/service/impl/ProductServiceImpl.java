@@ -23,8 +23,8 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public int getCountByCategory(String categoryName) {
-		return productDao.selectCountByCategory(categoryName);
+	public int getCountByCategory(int categoryId) {
+		return productDao.selectCountByCategory(categoryId);
 	}
 
 	@Override
@@ -36,8 +36,8 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	@Transactional
-	public List<ProductDisplayFile> getProductsByCategory(String categoryName, Integer start) {
-		List<ProductDisplayFile> list = productDao.selectByCategory(categoryName, start, ProductService.LIMIT);
+	public List<ProductDisplayFile> getProductsByCategory(int categoryId, Integer start) {
+		List<ProductDisplayFile> list = productDao.selectByCategory(categoryId, start, ProductService.LIMIT);
 		return list;
 	}
 

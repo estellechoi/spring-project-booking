@@ -37,9 +37,9 @@ public class ProductDao {
 	}
 	
 	// 카테고리별 상품수
-	public int selectCountByCategory(String categoryName) {
-		Map<String, String> paramMap = new HashMap<>();
-		paramMap.put("categoryName", categoryName);
+	public int selectCountByCategory(int categoryId) {
+		Map<String, Integer> paramMap = new HashMap<>();
+		paramMap.put("categoryId", categoryId);
 		return template.queryForObject(SELECT_COUNT_BY_CATEGORY, paramMap, Integer.class);
 	}
 	
@@ -55,10 +55,10 @@ public class ProductDao {
 	}
 	
 	// 카테고리별 상품 불러오기
-	public List<ProductDisplayFile> selectByCategory(String categoryName, Integer start, Integer limit) {
+	public List<ProductDisplayFile> selectByCategory(int categoryId, Integer start, Integer limit) {
 
 		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put("categoryName", categoryName);
+		paramMap.put("categoryId", categoryId);
 		paramMap.put("start", start);
 		paramMap.put("limit", limit);
 		

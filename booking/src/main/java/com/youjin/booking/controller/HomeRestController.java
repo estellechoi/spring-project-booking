@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.youjin.booking.dto.Category;
 import com.youjin.booking.dto.ProductDisplayFile;
+import com.youjin.booking.dto.Promotion;
 import com.youjin.booking.service.CategoryService;
 import com.youjin.booking.service.ProductService;
+import com.youjin.booking.service.PromotionService;
 
 // @RestController = @Controller + @ResponseBody
 // @ResponseBody : 뷰 페이지를 응답하지 않고 return 값을 그대로 반환하겠다.
@@ -25,30 +27,34 @@ import com.youjin.booking.service.ProductService;
 public class HomeRestController {
 
 	@Autowired
+	PromotionService promotionService;
+	@Autowired
 	ProductService productService;
 	@Autowired
 	CategoryService categoryService;
 
 	// ajax (탭 메뉴, 더보기 버튼)
-	@GetMapping(path = "/home/{category}")
+	@GetMapping(path = "/home/{categoryId}")
 	public Map<String, Object> home(
 			@RequestParam(name = "start", required = false, defaultValue = "0") int start,
-			@PathVariable(name = "category") String categoryName) {
+			@PathVariable(name = "categoryId") int categoryId) {
 		
 		Map<String, Object> map = new HashMap<>();
 
 		List<ProductDisplayFile> listProduct = null;
 		int count = 0;
+		
+		List<Promotion> listPromotion = promotionService.getPromotions();
 		List<Category> listCategory = categoryService.getCategories();
 		
-		if (categoryName.equals("전체리스트")) {
+		if (categoryId == 0) {
 			listProduct = productService.getProducts(start);		
 			// 전체 상품의 수
 			count = productService.getCount();
 		}
 		else {
-			listProduct = productService.getProductsByCategory(categoryName, start);
-			count = productService.getCountByCategory(categoryName);
+			listProduct = productService.getProductsByCategory(categoryId, start);
+			count = productService.getCountByCategory(categoryId);
 		}
 		
 		// 페이지 수
@@ -63,12 +69,7 @@ public class HomeRestController {
 			listPageStartIndex.add(i * productService.LIMIT);
 		}
 		
-		for (int i = 0; i<listProduct.size(); i++) {
-			System.out.println(listProduct.get(i).getDescription());			
-		}
-
-		System.out.println(listPageStartIndex.size());
-		System.out.println(count);
+		map.put("listPromotion", listPromotion);
 		map.put("listCategory", listCategory);
 		map.put("count", count);
 		map.put("listProduct", listProduct);

@@ -18,7 +18,7 @@
 	transition: all 2s ease-out;
 }
 /* 그 안의 이미지들 */
-#promotion>img {
+#promotion > img {
 	width: 600px;
 }
 

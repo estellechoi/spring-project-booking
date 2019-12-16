@@ -1,14 +1,17 @@
 /**
  * 
  */
-const templateTabContent = document.getElementById("template-tabcontent").innerHTML;
+const templatePromotion = document.querySelector("#template-promotion").innerHTML;
+const templateCategories = document.querySelector("#template-categories").innerHTML;
+const templateTabContent = document.querySelector("#template-tabcontent").innerHTML;
 const templateBtn = document.querySelector("#template-btn").innerHTML;
 var countPromotion = 0;
 var countPage = 1;
+var countAjaxLoad = 0;
 
 window.addEventListener("DOMContentLoaded", slidePromotion);
 window.addEventListener("DOMContentLoaded", controlBtnShowmore(countPage));
-window.addEventListener("DOMContentLoaded", sendAjax(0, '전체리스트'));
+window.addEventListener("DOMContentLoaded", sendAjax(0, '0'));
 
 const btnTop = document.querySelector("#btn-top");
 btnTop.addEventListener("click", goTop);
@@ -16,7 +19,7 @@ btnTop.addEventListener("click", goTop);
 // 카테고리 탭 클릭
 const tabMenu = document.querySelector("#tab-menu");
 tabMenu.addEventListener("click", function(evt) {
-	sendAjax(0, evt.target.innerText);
+	sendAjax(0, evt.target.getAttribute("data-value"));
 	makeTabColored(evt.target.innerText);
 });
 
@@ -31,40 +34,55 @@ function locateProductPage(id) {
 }
 
 //AJAX
-function sendAjax(start, clickedMenu) {
+function sendAjax(start, categoryId) {
 	var oReq = new XMLHttpRequest();
 	oReq.addEventListener("load", function() {
 		// json 포맷 문자열 응답결과를 json 객체로 변환 (서버 Map -> json 객체)
 		var jsonObj = JSON.parse(this.responseText);
-		sendJson(jsonObj, start, clickedMenu);
+		sendJson(jsonObj, start, categoryId);
 	});
-	oReq.open("GET", "./json/home/" + clickedMenu + "?start=" + start);
+	oReq.open("GET", "./json/home/" + categoryId + "?start=" + start);
 	oReq.send();
 }
 
-function sendJson(jsonObj, start, clickedMenu) {
+function sendJson(jsonObj, start, categoryId) {
+	countAjaxLoad++;
 	// var listCategory = jsonObj["listCategory"];
 	var count = jsonObj["count"];
 	var listProduct = jsonObj["listProduct"];
 	var listPageStartIndex = jsonObj["listPageStartIndex"];
+	var listCategory = jsonObj["listCategory"];
+	var listPromotion = jsonObj["listPromotion"];
 	
-	getContentTemplate(listProduct, start);
+	if(countAjaxLoad === 1) {
+		getPromotionTempl(listPromotion);
+		getCategoriesTempl(listCategory);		
+	}
+	
+	getContentTempl(listProduct, start);
 	
 	if (start === 0) {
 		getCount(count);
-		btnTemplate(listPageStartIndex, clickedMenu);
-		// 페이지, 버튼 보이기 숨기기 초기화
+		getBtnTempl(listPageStartIndex, categoryId);
 		countPage = 1;
 		controlBtnShowmore(countPage);
 	} else {
-		// 페이지 수 카운트, 버튼 보이기 숨기기 컨트롤
 		countPage++;
 		controlBtnShowmore(countPage);
 	}
 }
 
-function getContentTemplate(listProduct, start) {
-	var tabContentContainer = document.querySelector("#tab-content-container");
+function getPromotionTempl(listPromotion) {
+	var bindTemplate = Handlebars.compile(templatePromotion);
+	var resultHTML = "";
+	listPromotion.forEach(function(obj) {
+		var resultTpl = bindTemplate(obj);
+		resultHTML += resultTpl;
+	});
+	document.querySelector("#promotion").innerHTML = resultHTML;
+};
+
+function getContentTempl(listProduct, start) {
 	var contentLeft = document.querySelector("#content-left");
 	var contentRight = document.querySelector("#content-right");
 	if (start === 0) {
@@ -72,14 +90,11 @@ function getContentTemplate(listProduct, start) {
 		contentRight.innerHTML = "";
 	}
 	// listProduct : ProductDisplayFile 객체를 요소로 하는 배열
+	var bindTemplate = Handlebars.compile(templateTabContent);
 	var resultLeft = "";
 	var resultRight = "";
 	listProduct.forEach(function(product, i) {
-		var resultTpl = templateTabContent.replace("{saveFileName}", product["saveFileName"])
-										  .replace("{description}", product["description"])
-										  .replace("{placeName}", product["placeName"])
-										  .replace("{content}", product["content"])
-										  .replace("{id}",product["id"]);
+		var resultTpl = bindTemplate(product);
 		if (i % 2 == 0) {
 			resultLeft += resultTpl;			
 		}
@@ -87,26 +102,8 @@ function getContentTemplate(listProduct, start) {
 			resultRight += resultTpl;
 		}
 	});
-//	tabContentContainer.insertAdjacentHTML("beforeend", resultHTML);
 	contentLeft.insertAdjacentHTML("beforeend", resultLeft);
 	contentRight.insertAdjacentHTML("beforeend", resultRight);
-}
-
-// 탭마다 더보기 버튼 얻어오기
-function btnTemplate(listPageStartIndex, clickedMenu) {
-	// 초기화
-	var btnContainer = document.querySelector("#btn-container");
-	btnContainer.innerHTML = "";
-	// 카테고리별 페이지수에 맞추어 더보기 버튼 생성
-	var resultHTML = "";
-	listPageStartIndex.forEach(function(index) {
-		if (index !== 0) {
-			var resultTemplate = templateBtn.replace("{pageStartIndex}", index)
-					.replace("{clickedMenu}", clickedMenu);
-			resultHTML += resultTemplate;
-		}
-	});
-	btnContainer.insertAdjacentHTML("beforeend", resultHTML);
 }
 
 function getCount(count) {
@@ -114,23 +111,32 @@ function getCount(count) {
 	countResult.innerText = count + "개";
 }
 
-// 카테고리 ajax 보류 .. (카테고리를 꼭 비동기 처리해야 할까 ..?)
-function getCategories(listCategory) {
-	// 카테고리 초기화
-	document.querySelector("#tab-menu").innerHTML = "<div class='categories'>전체리스트</div>";
-
-	// 카테고리 template
-	const templateCategories = document.querySelector("#template-categories").innerHTML;
+// 카테고리별 더보기 버튼 생성
+function getBtnTempl(listPageStartIndex, categoryId) {
+//	var bindTemplate = Handlebars.compile(templateBtn);
+	var btnContainer = document.querySelector("#btn-container");
+	btnContainer.innerHTML = "";
+	// 카테고리별 페이지수에 맞추어 더보기 버튼 생성
 	var resultHTML = "";
-	listCategory.forEach(function(ObjValue, index) {
-		var resultTemplate = templateCategories.replace("{categoryName}",
-				ObjValue["name"]);
-		resultHTML += resultTemplate;
+	listPageStartIndex.forEach(function(index) {
+		if (index !== 0) {
+			var resultTpl = templateBtn.replace("{pageStartIndex}", index)
+									   .replace("{categoryId}", categoryId);
+			resultHTML += resultTpl;
+		}
 	});
-	document.querySelector("#tab-menu").insertAdjacentHTML("beforeend",
-			resultHTML);
+	btnContainer.insertAdjacentHTML("beforeend", resultHTML);
 }
 
+function getCategoriesTempl(listCategory) {
+	var bindTemplate = Handlebars.compile(templateCategories);
+	var resultHTML = "";
+	listCategory.forEach(function(obj) {
+		var resultTpl = bindTemplate(obj);
+		resultHTML += resultTpl;
+	});
+	document.querySelector("#tab-menu").insertAdjacentHTML("beforeend", resultHTML);
+}
 
 
 // setTimeout을 하는 순간 호출 스택에 함수가 쌓이는 게 아니라 백그라운드를 거쳐 태스크 큐로 넘어가기 때문에 호출 스택이 터지는
