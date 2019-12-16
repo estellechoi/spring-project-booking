@@ -35,7 +35,6 @@ public class HomeController {
 		List<Category> listCategory = categoryService.getCategories();
 		// 전체 상품의 수
 		int count = productService.getCount();
-
 		// 전체 상품 목록
 		List<ProductDisplayFile> listProduct = productService.getProducts(start);
 		// 페이지 수
@@ -43,7 +42,6 @@ public class HomeController {
 		if (count % productService.LIMIT > 0) {
 			pageCount++;
 		}
-
 		// 페이지 수만큼 start index 를 리스트로 저장
 		List<Integer> listPageStartIndex = new ArrayList<>();
 		for (int i = 0; i < pageCount; i++) {
@@ -58,5 +56,10 @@ public class HomeController {
 		model.addAttribute("listPageStartIndex", listPageStartIndex);
 
 		return "home";
+	}
+	
+	@GetMapping(path = "/product")
+	public String product() {
+		return "product";
 	}
 }

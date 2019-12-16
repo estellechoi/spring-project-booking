@@ -1,0 +1,45 @@
+@charset "UTF-8";
+
+@font-face {
+	font-family: NanumGothicWebR;
+	font-style: normal;
+	font-weight: 400;
+	src: url('/booking/font/NanumGothicRegular.woff') format('woff')
+}
+
+body, header, section, div {
+	font-family: NanumGothicWebR;
+}
+
+body {
+	background: #444444;
+	margin: 0;
+}
+
+#viewport {
+	background: #eeeeee;
+	width: 600px;
+	margin: 0px auto;
+}
+
+#gnb {
+	height: 50px;
+	background: #5ECB6B;	
+}
+
+#gnb>div {
+	display: inline-block;
+	height: 50px;
+	line-height: 50px;
+	color: white;
+}
+
+#logo {
+	float: left;
+	margin-left: 20px;
+}
+
+#user-email {
+	float: right;
+	margin-right: 20px;
+}

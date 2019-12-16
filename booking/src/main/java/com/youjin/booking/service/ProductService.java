@@ -12,4 +12,5 @@ public interface ProductService {
 	public int getCountByCategory(String categoryName);
 	public List<ProductDisplayFile> getProducts(Integer start);
 	public List<ProductDisplayFile> getProductsByCategory(String categoryName, Integer start);
+	public List<ProductDisplayFile> getProductById(Integer id);
 }

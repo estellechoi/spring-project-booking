@@ -1,0 +1,146 @@
+@charset "UTF-8";
+
+/* 고정된 컨테이너 */
+#promotion-container {
+	height: 300px;
+	overflow: hidden;
+	/* 부모요소의 position 을 static 하지 않게 설정 */
+	position: relative;
+	top: 0px;
+	left: 0px;
+}
+/* 실제 움직이는 녀석 */
+#promotion {
+	height: 300px;
+	position: absolute;
+	top: 0px;
+	display: flex;
+	transition: all 2s ease-out;
+}
+/* 그 안의 이미지들 */
+#promotion>img {
+	width: 600px;
+}
+
+#tab-container {
+	text-align: center;
+}
+
+#tab-menu {
+	background: white;
+	text-align: center;
+	height: 50px;
+}
+
+#tab-menu>.categories {
+	height: 50px;
+	display: inline-block;
+	line-height: 50px;
+	text-align: center;
+	/* margin: auto 왜 안되지 */
+	width: 70px;
+	margin-right: 10px;
+	margin-left: 10px;
+	cursor: pointer;
+	font-size: 15px;
+	font-weight: 600;
+	color: #4c4c4c;
+}
+
+#tab-menu>.categories:nth-child(1) {
+	color: #5ECB6B;
+	border-bottom: 3px solid #5ECB6B;
+}
+
+#tab-count {
+	height: 50px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 3px;
+	background: white;
+	color: grey;
+}
+
+#tab-content-container {
+	margin: 0;
+	padding: 0;
+	display: inline-flex;
+	/*   		flex-direction: row; */
+	/* 줄바꿈 가능 */
+	flex-wrap: wrap;
+	/*   		flex-flow: row wrap; */
+	justify-content: space-around;
+	align-items: flex-start;
+}
+
+.tab-content {
+	/* 		align-self: baseline; */
+	margin: 5px;
+	flex: none;
+	text-align: center;
+	background: white;
+	width: 260px;
+	padding: 10px;
+	border: 1px solid lightgrey;
+	cursor: pointer;
+}
+
+.tab-content h3, h4 {
+	text-align: left;
+}
+
+.tab-content .product-content {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 2; /* 라인수 */
+	-webkit-box-orient: vertical;
+	word-wrap: break-word;
+	line-height: 1.2em;
+	height: 2.4em;
+	text-align: left;
+	color: grey;
+	border-top: 1px solid #eeeeee;
+	padding-top: 10px;
+}
+
+.btn-showmore {
+	display: none;
+	justify-content: center;
+	align-items: center;
+	background: white;
+	font-size: 15px;
+	border: 1px solid lightgrey;
+	cursor: pointer;
+	height: 50px;
+	width: 570px;
+	margin: 5px auto;
+}
+
+#btn-top {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: none;
+	border: none;
+	font-size: 15px;
+	color: darkgrey;
+	cursor: pointer;
+	height: 50px;
+	width: 570px;
+	margin: 5px auto;
+}
+
+footer {
+	padding: 20px;
+	text-align: center;
+	line-height: 20px;
+	font-size: 15px;
+	color: grey;
+}
+
+.copyright, .infoPolicy {
+	color: #5d5d5d;
+	font-weight: 600;
+}

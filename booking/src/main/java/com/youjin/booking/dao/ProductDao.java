@@ -4,6 +4,7 @@ import static com.youjin.booking.dao.ProductDaoSqls.SELECT_ALL_LIMIT;
 import static com.youjin.booking.dao.ProductDaoSqls.SELECT_BY_CATEGORY;
 import static com.youjin.booking.dao.ProductDaoSqls.SELECT_COUNT;
 import static com.youjin.booking.dao.ProductDaoSqls.SELECT_COUNT_BY_CATEGORY;
+import static com.youjin.booking.dao.ProductDaoSqls.SELECT_BY_ID;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,8 +27,7 @@ public class ProductDao {
 	private RowMapper<ProductDisplayFile> rowMapper = BeanPropertyRowMapper.newInstance(ProductDisplayFile.class);
 	
 	public ProductDao(DataSource dataSource) {
-		this.template = new NamedParameterJdbcTemplate(dataSource);
-		
+		this.template = new NamedParameterJdbcTemplate(dataSource);		
 	}
 	
 	// 전체 상품수
@@ -36,6 +36,7 @@ public class ProductDao {
 		return template.queryForObject(SELECT_COUNT, paramMap, Integer.class);
 	}
 	
+	// 카테고리별 상품수
 	public int selectCountByCategory(String categoryName) {
 		Map<String, String> paramMap = new HashMap<>();
 		paramMap.put("categoryName", categoryName);
@@ -62,7 +63,13 @@ public class ProductDao {
 		paramMap.put("limit", limit);
 		
 		return template.query(SELECT_BY_CATEGORY, paramMap, rowMapper);
+	}
+	
+	// 상품별 상세정보 가져오기
+	public	List<ProductDisplayFile> selectById(Integer id) {
+		Map<String, Integer> paramMap = new HashMap<>();
+		paramMap.put("id", id);
 		
-
+		return template.query(SELECT_BY_ID, paramMap, rowMapper);
 	}
 }

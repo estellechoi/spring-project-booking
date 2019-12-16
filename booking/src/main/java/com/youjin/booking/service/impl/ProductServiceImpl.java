@@ -40,6 +40,14 @@ public class ProductServiceImpl implements ProductService {
 		List<ProductDisplayFile> list = productDao.selectByCategory(categoryName, start, ProductService.LIMIT);
 		return list;
 	}
+
+	@Override
+	public List<ProductDisplayFile> getProductById(Integer id) {
+		List<ProductDisplayFile> list = productDao.selectById(id);
+		return list;
+	}
+	
+	
 	
 	
 	

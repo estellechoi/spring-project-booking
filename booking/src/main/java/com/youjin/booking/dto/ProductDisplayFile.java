@@ -7,8 +7,19 @@ public class ProductDisplayFile {
 	private String placeName;
 	private String saveFileName;
 	private String categoryName;
+	private String event;
 	
 	
+	
+	
+	public String getEvent() {
+		return event;
+	}
+
+	public void setEvent(String event) {
+		this.event = event;
+	}
+
 	public String getCategoryName() {
 		return categoryName;
 	}

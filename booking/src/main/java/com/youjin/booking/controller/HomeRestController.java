@@ -35,6 +35,8 @@ public class HomeRestController {
 			@RequestParam(name = "start", required = false, defaultValue = "0") int start,
 			@PathVariable(name = "category") String categoryName) {
 		
+		Map<String, Object> map = new HashMap<>();
+
 		List<ProductDisplayFile> listProduct = null;
 		int count = 0;
 		List<Category> listCategory = categoryService.getCategories();
@@ -60,12 +62,11 @@ public class HomeRestController {
 		for (int i = 0; i < pageCount; i++) {
 			listPageStartIndex.add(i * productService.LIMIT);
 		}
-
 		
-		Map<String, Object> map = new HashMap<>();
 		for (int i = 0; i<listProduct.size(); i++) {
 			System.out.println(listProduct.get(i).getDescription());			
 		}
+
 		System.out.println(listPageStartIndex.size());
 		System.out.println(count);
 		map.put("listCategory", listCategory);
@@ -75,5 +76,13 @@ public class HomeRestController {
 		return map;
 		// 반환된 map 은 JSON으로 변환하는 메시지 컨버터에 의해 json 포맷 문자열로 변환
 	}
-
+	
+	@GetMapping(path = "/product")
+	public Map<String, Object> product(@RequestParam(name ="id") int id) {
+		Map<String, Object> map = new HashMap<>();
+		List<ProductDisplayFile> listProduct = productService.getProductById(id);
+		map.put("listProduct", listProduct);
+						
+		return map;
+	}
 }
