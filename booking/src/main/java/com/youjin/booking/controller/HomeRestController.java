@@ -1,5 +1,6 @@
 package com.youjin.booking.controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.youjin.booking.dto.Category;
 import com.youjin.booking.dto.ProductDisplayFile;
 import com.youjin.booking.dto.Promotion;
+import com.youjin.booking.dto.ReservationUserComment;
 import com.youjin.booking.service.CategoryService;
 import com.youjin.booking.service.ProductService;
 import com.youjin.booking.service.PromotionService;
+import com.youjin.booking.service.ReservationUserCommentService;
 
 // @RestController = @Controller + @ResponseBody
 // @ResponseBody : 뷰 페이지를 응답하지 않고 return 값을 그대로 반환하겠다.
@@ -32,6 +35,8 @@ public class HomeRestController {
 	ProductService productService;
 	@Autowired
 	CategoryService categoryService;
+	@Autowired
+	ReservationUserCommentService reservationUserCommentService;
 
 	// ajax (탭 메뉴, 더보기 버튼)
 	@GetMapping(path = "/home/{categoryId}")
@@ -86,9 +91,28 @@ public class HomeRestController {
 		ProductDisplayFile product = productService.getProductById(id);
 		// 상품 객체 1개 이상 (이미지의 수에 따라)
 		List<ProductDisplayFile> listImage = productService.getProductImageById(id);
+		
+		ProductDisplayFile displayInfo = productService.getDisplayInfoById(id);
+		
 		map.put("product", product);
 		map.put("listImage", listImage);
+		map.put("displayInfo", displayInfo);
 						
 		return map;
+	}
+	
+	@GetMapping(path = "/comment")
+	public Map<String, Object> comment(@RequestParam(name = "id") int id) {
+		System.out.println(id);
+		Map<String, Object> map = new HashMap<>();
+		int count =reservationUserCommentService.getCount(id);
+		BigDecimal avg = reservationUserCommentService.getAvg(id);
+		List<ReservationUserComment> listComment = reservationUserCommentService.getComment(id);
+		
+		map.put("count", count);
+		map.put("avg", avg);
+		map.put("listComment", listComment);
+		
+		return map;	
 	}
 }

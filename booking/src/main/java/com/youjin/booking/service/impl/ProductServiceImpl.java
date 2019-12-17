@@ -52,6 +52,14 @@ public class ProductServiceImpl implements ProductService {
 		List<ProductDisplayFile> list = productDao.selectImageById(id);
 		return list;
 	}
+
+	@Override
+	public ProductDisplayFile getDisplayInfoById(Integer id) {
+		ProductDisplayFile displayInfo = productDao.selectDisplayById(id);
+		return displayInfo;
+	}
+	
+	
 	
 	
 	
