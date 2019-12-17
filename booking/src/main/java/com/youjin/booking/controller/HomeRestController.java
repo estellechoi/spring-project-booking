@@ -81,8 +81,13 @@ public class HomeRestController {
 	@GetMapping(path = "/product")
 	public Map<String, Object> product(@RequestParam(name ="id") int id) {
 		Map<String, Object> map = new HashMap<>();
-		List<ProductDisplayFile> listProduct = productService.getProductById(id);
-		map.put("listProduct", listProduct);
+		
+		// 상품 객체 1개 
+		ProductDisplayFile product = productService.getProductById(id);
+		// 상품 객체 1개 이상 (이미지의 수에 따라)
+		List<ProductDisplayFile> listImage = productService.getProductImageById(id);
+		map.put("product", product);
+		map.put("listImage", listImage);
 						
 		return map;
 	}

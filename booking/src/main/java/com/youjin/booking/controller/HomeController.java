@@ -62,4 +62,9 @@ public class HomeController {
 	public String product() {
 		return "product";
 	}
+	
+	@GetMapping(path = "/comment")
+	public String comment() {
+		return "comment";
+	}
 }

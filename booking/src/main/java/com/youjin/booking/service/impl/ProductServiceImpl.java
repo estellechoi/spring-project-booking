@@ -42,10 +42,18 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductDisplayFile> getProductById(Integer id) {
-		List<ProductDisplayFile> list = productDao.selectById(id);
+	public ProductDisplayFile getProductById(Integer id) {
+		ProductDisplayFile product = productDao.selectById(id);
+		return product;
+	}
+
+	@Override
+	public List<ProductDisplayFile> getProductImageById(Integer id) {
+		List<ProductDisplayFile> list = productDao.selectImageById(id);
 		return list;
 	}
+	
+	
 	
 	
 	

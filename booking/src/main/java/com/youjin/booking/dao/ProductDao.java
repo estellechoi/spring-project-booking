@@ -5,6 +5,7 @@ import static com.youjin.booking.dao.ProductDaoSqls.SELECT_BY_CATEGORY;
 import static com.youjin.booking.dao.ProductDaoSqls.SELECT_COUNT;
 import static com.youjin.booking.dao.ProductDaoSqls.SELECT_COUNT_BY_CATEGORY;
 import static com.youjin.booking.dao.ProductDaoSqls.SELECT_BY_ID;
+import static com.youjin.booking.dao.ProductDaoSqls.SELECT_IMAGE_BY_ID;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -66,10 +67,18 @@ public class ProductDao {
 	}
 	
 	// 상품별 상세정보 가져오기
-	public	List<ProductDisplayFile> selectById(Integer id) {
+	public	ProductDisplayFile selectById(Integer id) {
 		Map<String, Integer> paramMap = new HashMap<>();
 		paramMap.put("id", id);
 		
-		return template.query(SELECT_BY_ID, paramMap, rowMapper);
+		return template.queryForObject(SELECT_BY_ID, paramMap, rowMapper);
+	}
+	
+	// 상품별 이미지 가져오기
+	public List<ProductDisplayFile> selectImageById(Integer id) {
+		Map<String, Integer> paramMap = new HashMap<>();
+		paramMap.put("id", id);
+		
+		return template.query(SELECT_IMAGE_BY_ID, paramMap, rowMapper);		
 	}
 }

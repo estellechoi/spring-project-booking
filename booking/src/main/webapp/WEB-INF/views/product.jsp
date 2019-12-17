@@ -14,23 +14,39 @@
 /*  	width: 100%; */
 }
 
-#background-container {
+#btn-comment {
+	height: 50px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+a {
+	text-decoration: none;
+}
+
+#title-container {
   	height: 600px;
   	overflow: hidden;
   	position: relative;
 }
 
-#frontground {
+#background {
+	border: 1px solid red;
+}
+
+#title {
 	position: absolute;
-	left: 50%;
-	transform:translateX(-50%);
 	top: 50%;
+	width: 100%;
+	text-align: center;
 	font-size: 30px;
+	font-weight: bold;
 	color: white;
 }
 
 #content-container {
-	height: 100px;
+	height: 80px;
 	overflow: hidden;
 	background: white;
 }
@@ -45,8 +61,8 @@
 	height: 50px;
 	width: 600px;
 	font-size: 15px;
-	background: #eeeeee;
-	border: 1px solid lightgrey;
+	background: #f6f6f6;
+	border: none;
 	vertical-align: middle;
 	cursor: pointer;
 }
@@ -71,9 +87,40 @@
 	width: 600px;
 	font-size: 15px;
 	background: #5ECB6B;
+	border: none;
 	color: white;
 	vertical-align: middle;
 	cursor: pointer;
+}
+
+#comment-container {
+	height: 400px;
+	overflow: hidden;
+	padding: 10px 20px;
+	background: white;
+}
+
+#displayinfo-container {
+	margin-top: 5px;
+	background: white;
+}
+
+#displayinfo-container > nav {
+	display: flex;
+	height: 50px;
+	margin-bottom: 3px;
+	
+}
+
+#displayinfo-container > nav > div {
+	flex-grow: 1;
+	line-height: 50px;
+	text-align: center;
+}
+
+#displayinfo-container > nav > div:nth-child(1) {
+	color: #5ECB6B;
+	border-bottom: 3px solid #5ECB6B;
 }
 </style>
 </head>
@@ -84,40 +131,63 @@
 			<div id="logo">예약</div>
 			<div id="user-email">eeee@naver.com</div>
 		</header>
-		<div id="background-container">
+		
+		<div id="title-container">
 			<div id="background">
+				<script type="text/template" id="template-imgs">
+					<img class="backgroundImgs" src="{{saveFileName}}" alt="no image" width="100%"/>
+				</script>
 			</div>
+			<script type="text/template" id="template-title">
+				<div id="title">{{description}}</div>
+			</script>
 		</div>
-		<section id="content-container"></section>
+		
+		<section id="content-container">
+			<script type="text/template" id="template-content">
+				<div id="content">{{content}}</div>
+			</script>
+		</section>
+		
 		<input id="btn-unfold" type="button" value="펼쳐보기" />
+		
 		<section id="event-container">
 			<div>이벤트 정보</div>
+			<script type="text/template" id="template-event">
+				<div id="event">
+					{{#events event}}
+						{{event}}
+					{{/events}}
+				</div>
+			</script>
 		</section>
+		
 		<input id="btn-reservation" type="button" value="예매하기" />	
+		
+		<!-- jsp import 로 수정 ? -->
+		<section id="comment-container">
+		</section>
+		
+		<!-- 한줄평 전체보기 페이지 이동 -->
+		<nav id="btn-comment">
+			<a href="comment?id=${param.id}">예매자 한줄평 더보기</a>
+		</nav>
+		
+		<section id="displayinfo-container">
+			<nav>
+				<div>상세정보</div>
+				<div>오시는길</div>
+			</nav>
+			<section>
+				tab ui 구현 영역			
+			</section>
+		</section>
+		
 	</div>
-	
-	<!-- html template -->
-	<script type="text/template" id="template-background">
-		<img class="backgroundImgs" src="{{saveFileName}}" alt="no image" width="100%"/>
-	</script>
-	<script type="text/template" id="template-frontground">
-		<!-- position absolute -->
-		<div id="frontground">{{description}}</div>
-	</script>
-	<script type="text/template" id="template-content">
-		<div id="content">{{content}}</div>
-	</script>
-	<script type="text/template" id="template-event">
-		<div id="event">
-			{{#events event}}
-				{{event}}
-			{{/events}}
-		</div>
-	</script>
-	
 	<!-- handlebar library 다운로드 -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.5.3/handlebars.min.js" integrity="sha256-GwjGuGudzIwyNtTEBZuBYYPDvNlSMSKEDwECr6x6H9c=" crossorigin="anonymous"></script>
 	<script>
+		// Handlebars helper 등록
 		Handlebars.registerHelper("events", function(event) {
 			if (event === "") {
 				return "현재 진행중인 이벤트가 없습니다.";
@@ -126,6 +196,12 @@
 				return event;
 			}
 		});
+		
+		const templateImgs = document.querySelector("#template-imgs").innerHTML;
+		const templateTitle = document.querySelector("#template-title").innerHTML;
+		const templateContent = document.querySelector("#template-content").innerHTML;
+		const templateEvent = document.querySelector("#template-event").innerHTML;
+		
 		// DOM Loaded
 		const id = document.querySelector("#viewport").getAttribute("data-value");
 		window.addEventListener("DOMContentLoaded", sendAjax(id));
@@ -134,65 +210,52 @@
 			var oReq = new XMLHttpRequest();
 			oReq.addEventListener("load", function() {
 				var jsonObj = JSON.parse(this.responseText);
-				getTemplateBackground(jsonObj);
-// 				getBackgroundImg(jsonObj);
-				getTemplateContent(jsonObj);
-				getTemplateEvent(jsonObj);
+				sendJson(jsonObj);
 			});
 			oReq.open("GET", "./json/product?id=" + id);
 			oReq.send();
 		}
 		
-		function getTemplateEvent(jsonObj) {
-			const template = document.querySelector("#template-event").innerHTML;
-			var bindTemplate = Handlebars.compile(template);
-			
-			var listProduct = jsonObj["listProduct"];
-			var resultHTML = bindTemplate(listProduct[0]);
-			var eventContainer = document.querySelector("#event-container");
-			eventContainer.insertAdjacentHTML("beforeend", resultHTML);	
+		function sendJson(jsonObj) {
+			var product = jsonObj["product"];
+			var listImage = jsonObj["listImage"];
+			getImgsTempl(listImage);
+			getTitleTempl(product);
+			getContentTempl(product);
+			getEventTempl(product);		
+		}
+
+		function getImgsTempl(listImage) {
+			var bindTemplate = Handlebars.compile(templateImgs);
+			var background = document.querySelector("#background");
+						
+			var resultHTML = "";
+			listImage.forEach(function(obj) {
+				var resultTpl = bindTemplate(obj);
+				resultHTML += resultTpl;
+			});
+			background.innerHTML = resultHTML;
 		}
 		
-		function getTemplateContent(jsonObj) {
-			const template = document.querySelector("#template-content").innerHTML;
-			var bindTemplate = Handlebars.compile(template);
-			
-			var listProduct = jsonObj["listProduct"];
-			var resultHTML = bindTemplate(listProduct[0]);
-// 			alert(listProduct[0].id);
-			
+		function getTitleTempl(product) {
+			var bindTemplate = Handlebars.compile(templateTitle);
+			var resultHTML = bindTemplate(product);
+			var titleContainer = document.querySelector("#title-container");
+			titleContainer.insertAdjacentHTML("beforeend", resultHTML);		
+		}
+
+		function getContentTempl(product) {
+			var bindTemplate = Handlebars.compile(templateContent);			
+			var resultHTML = bindTemplate(product);			
 			var contentContainer = document.querySelector("#content-container");
 			contentContainer.innerHTML = resultHTML;
 		}
-		
-		function getTemplateBackground(jsonObj) {
-			const templateBack = document.querySelector("#template-background").innerHTML;
-			const templateFront = document.querySelector("#template-frontground").innerHTML;
-			var bindTemplateBack = Handlebars.compile(templateBack);
-			var bindTemplateFront = Handlebars.compile(templateFront);
-			var backgroundContainer = document.querySelector("#background-container");
-			var background = document.querySelector("#background");
-			
-			var listProduct = jsonObj["listProduct"];
-			var resultFront = bindTemplateFront(listProduct[0]);
-			backgroundContainer.insertAdjacentHTML("beforeend", resultFront);
-			
-			var resultBack = "";
-			listProduct.forEach(function(obj) {
-				resultBack += bindTemplateBack(obj);
-			});
-			background.innerHTML = resultBack;
-		}
-		
-		function getBackgroundImg(jsonObj) {
-			
-			var imgUrl = "";
-			listProduct.forEach(function(obj) {
-				imgUrl += "url('" + obj.saveFileName + "'),";		
-			});
-			var e = imgUrl.lastIndexOf(",");
-			imgUrl = imgUrl.substring(0, e);
-			backgroundContainer.style.backgroundImage = imgUrl;			
+
+		function getEventTempl(product) {
+			var bindTemplate = Handlebars.compile(templateEvent);			
+			var resultHTML = bindTemplate(product);
+			var eventContainer = document.querySelector("#event-container");
+			eventContainer.insertAdjacentHTML("beforeend", resultHTML);	
 		}
 		
 		// 펼쳐보기/접기
@@ -202,16 +265,24 @@
 		});
 		
 		function unfoldContent(value) {
+			var contentContainer = document.querySelector("#content-container");
 			if (value === "펼쳐보기") {
-				document.querySelector("#content-container").style.height = "auto";
+				// overflow hidden 내용이 있을 때에만
+				contentContainer.style.height = "auto";
+				if (contentContainer.offsetHeight < 80) {
+					contentContainer.style.height = "80px";
+				}
 				btnUnfold.value = "접기";
 			}
 			else {
-				document.querySelector("#content-container").style.height = "100px";
+				contentContainer.style.height = "80px";
 				btnUnfold.value = "펼쳐보기";
 			}
 		}
 
+// 		const btnComment = document.querySelector("#btn-comment");
+// 		btnComment.addEventListener("click", function() {			
+// 		});
 	</script>
 </body>
 </html>
