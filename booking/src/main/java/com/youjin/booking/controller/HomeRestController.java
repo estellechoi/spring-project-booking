@@ -84,7 +84,8 @@ public class HomeRestController {
 	}
 	
 	@GetMapping(path = "/product")
-	public Map<String, Object> product(@RequestParam(name ="id") int id) {
+	public Map<String, Object> product(@RequestParam(name ="id") int id,
+										@RequestParam(name ="displayInfoId") int displayInfoId) {
 		Map<String, Object> map = new HashMap<>();
 		
 		// 상품 객체 1개 
@@ -92,7 +93,7 @@ public class HomeRestController {
 		// 상품 객체 1개 이상 (이미지의 수에 따라)
 		List<ProductDisplayFile> listImage = productService.getProductImageById(id);
 		
-		ProductDisplayFile displayInfo = productService.getDisplayInfoById(id);
+		ProductDisplayFile displayInfo = productService.getDisplayInfoById(id, displayInfoId);
 		
 		map.put("product", product);
 		map.put("listImage", listImage);
@@ -102,13 +103,14 @@ public class HomeRestController {
 	}
 	
 	@GetMapping(path = "/comment")
-	public Map<String, Object> comment(@RequestParam(name = "id") int id) {
-		System.out.println(id);
+	public Map<String, Object> comment(@RequestParam(name = "id") int id,
+									@RequestParam(name = "displayInfoId") int displayInfoId) {
+		System.out.println(id + " " + displayInfoId);
 		Map<String, Object> map = new HashMap<>();
-		int count =reservationUserCommentService.getCount(id);
-		BigDecimal avg = reservationUserCommentService.getAvg(id);
-		List<ReservationUserComment> listComment = reservationUserCommentService.getComment(id);
-		
+		int count =reservationUserCommentService.getCount(id, displayInfoId);
+		BigDecimal avg = reservationUserCommentService.getAvg(id, displayInfoId);
+		List<ReservationUserComment> listComment = reservationUserCommentService.getComment(id, displayInfoId);
+		System.out.println(listComment);
 		map.put("count", count);
 		map.put("avg", avg);
 		map.put("listComment", listComment);

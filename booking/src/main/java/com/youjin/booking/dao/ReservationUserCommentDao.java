@@ -29,17 +29,19 @@ public class ReservationUserCommentDao {
 	}
 	
 	// 전체 한줄평 수
-	public int selectCount(Integer id) {
+	public int selectCount(Integer id, Integer displayInfoId) {
 		Map<String, Integer> paramMap = new HashMap<>();
 		paramMap.put("id", id);
+		paramMap.put("displayInfoId", displayInfoId);
 		int count = template.queryForObject(SELECT_COUNT, paramMap, Integer.class);
 		return count;
 	}
 	
 	// 전체 점수 평균 
-	public BigDecimal selectAvg(Integer id) {
+	public BigDecimal selectAvg(Integer id, Integer displayInfoId) {
 		Map<String, Integer> paramMap = new HashMap<>();
 		paramMap.put("id", id);
+		paramMap.put("displayInfoId", displayInfoId);
 		BigDecimal avg = template.queryForObject(SELECT_AVG, paramMap, BigDecimal.class);
 		// setScale(소수점 자릿수, 반올림 설정(RoundingMode.HALF_EVEN));
 		// javaScript 로 처리 ...
@@ -47,10 +49,10 @@ public class ReservationUserCommentDao {
 	}
 		
 	// 상품별 한줄평
-	public List<ReservationUserComment> selectById(Integer id) {
+	public List<ReservationUserComment> selectById(Integer id, Integer displayInfoId) {
 		Map<String, Integer> paramMap = new HashMap<>();
 		paramMap.put("id", id);
-		
+		paramMap.put("displayInfoId", displayInfoId);	
 		return template.query(SELECT_BY_ID, paramMap, rowMapper);
 	}
 }

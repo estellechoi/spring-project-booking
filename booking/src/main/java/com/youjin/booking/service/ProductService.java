@@ -14,5 +14,5 @@ public interface ProductService {
 	public List<ProductDisplayFile> getProductsByCategory(int categoryId, Integer start);
 	public ProductDisplayFile getProductById(Integer id);
 	public List<ProductDisplayFile> getProductImageById(Integer id);
-	public ProductDisplayFile getDisplayInfoById(Integer id);
+	public ProductDisplayFile getDisplayInfoById(Integer id, int displayInfoId);
 }

@@ -1,0 +1,221 @@
+@charset "UTF-8";
+
+#title-container {
+	height: 500px;
+	overflow: hidden;
+	position: relative;
+	padding: 0;
+}
+
+#background {
+	opacity: 0.7;
+	/* 	min-width: 2400px; */
+	position: relative;
+	transition: all 0.5s ease-out;
+}
+
+#background>img {
+	display: inline-block;
+	/* block 간 여백이 생긴다. -> margin 값을 음수로 */
+	width: 600px;
+	margin-right: -4px;
+}
+
+#title {
+	position: absolute;
+	top: 50%;
+	width: 100%;
+}
+
+#description {
+	text-align: center;
+	font-size: 30px;
+	font-weight: bold;
+	color: white;
+}
+
+#btn-slideImgs {
+	display: flex;
+}
+
+#btn-slideImgs span {
+	padding: 0 10px;
+	cursor: pointer;
+	font-size: 30px;
+	font-weight: bold;
+	color: white;
+}
+
+#btn-slideImgs span:nth-child(1) {
+	flex-grow: 1;
+	text-align: left;
+}
+
+#btn-slideImgs span:nth-child(2) {
+	flex-grow: 1;
+	text-align: right;
+}
+
+#content-container {
+	height: 80px;
+	overflow: hidden;
+	background: white;
+	/* transition is not working why ? guess height: auto property prevents transition*/
+	transition: max-height 0.5s ease-out;
+}
+
+#content {
+	padding: 20px;
+	font-size: 20px;
+	line-height: 30px;
+}
+
+#btn-unfold {
+	height: 50px;
+	width: 600px;
+	font-size: 15px;
+	color: #4c4c4c;
+	background: #f6f6f6;
+	border: 1px solid #eeeeee;
+	vertical-align: middle;
+	cursor: pointer;
+}
+
+#btn-unfold:focus {
+	outline: none;
+}
+
+#event-container {
+	padding: 0px 20px;
+	background: white;
+}
+
+#event-container>div {
+	padding: 10px;
+	height: 30px;
+	line-height: 30px;
+}
+
+#event {
+	border-top: 1px solid lightgrey;
+}
+
+#comment-container {
+	height: 200px;
+	overflow: hidden;
+	padding: 10px 20px;
+	background: white;
+}
+
+#btn-reservation {
+	background: #5ECB6B;
+	border: 1px solid #55B63B;
+	display: flex;
+}
+
+#btn-reservation a {
+	color: white;
+	flex-grow: 1;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+}
+
+#btn-comment {
+	display: flex;
+	background: #f6f6f6;
+	border: 1px solid #eeeeee;
+
+	/* 	justify-content: center; */
+	/* 	align-items: center; */
+}
+
+#btn-comment a {
+	color: #4c4c4c;
+	flex-grow: 1;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+}
+
+#displayinfo-container {
+	margin-top: 5px;
+}
+
+#displayinfo-container>nav {
+	display: flex;
+}
+
+#displayinfo-container>nav>div {
+	background: white;
+	flex-grow: 1;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	cursor: pointer;
+}
+
+#displayinfo-container>nav>#nav-info {
+	color: #5ECB6B;
+	border-bottom: 3px solid #5ECB6B;
+}
+
+#displayinfo {
+	padding: 20px;
+	background: white;
+}
+
+#displayinfo h4 {
+	margin: 0;
+}
+/* 상세보기 */
+#info p {
+	line-height: 25px;
+}
+/* 오시는길 */
+#map-img {
+	margin-bottom: 20px;
+	height: 200px;
+	overflow: scroll;
+}
+
+#displayinfo table {
+	width: 400px;
+	margin: 20px 0;
+}
+
+#displayinfo table td {
+	padding: 5px 10px;
+}
+
+#placeLot-alert {
+	font-size: 13px;
+	color: grey;
+}
+
+#placeLot {
+	font-size: 14px;
+}
+
+#placeName {
+	color: #4c4c4c;
+	font-size: 14px;
+}
+
+#navigation-nav {
+	height: 50px;
+	background: #eeeeee;
+	border: 1px solid #dcdcdc;
+	display: flex;
+	align-items: center;
+}
+
+#navigation-nav a {
+	flex-grow: 1;
+	text-align: center;
+	color: #4c4c4c;
+}
+
+#navigation-nav a:nth-child(1) {
+	border-right: 2px solid #dcdcdc;
+}

@@ -16,20 +16,20 @@ public class ReservationUserCommentServiceImpl implements ReservationUserComment
 	ReservationUserCommentDao reservationUserCommentDao;
 	
 	@Override
-	public int getCount(Integer id) {
-		int count =reservationUserCommentDao.selectCount(id);
+	public int getCount(Integer id, Integer displayInfoId) {
+		int count =reservationUserCommentDao.selectCount(id, displayInfoId);
 		return count;
 	}
 
 	@Override
-	public BigDecimal getAvg(Integer id) {
-		BigDecimal avg =reservationUserCommentDao.selectAvg(id);
+	public BigDecimal getAvg(Integer id, Integer displayInfoId) {
+		BigDecimal avg =reservationUserCommentDao.selectAvg(id, displayInfoId);
 		return avg;
 	}
 
 	@Override
-	public List<ReservationUserComment> getComment(Integer id) {
-		List<ReservationUserComment> list = reservationUserCommentDao.selectById(id);
+	public List<ReservationUserComment> getComment(Integer id, Integer displayInfoId) {
+		List<ReservationUserComment> list = reservationUserCommentDao.selectById(id, displayInfoId);
 		return list;
 	}
 	

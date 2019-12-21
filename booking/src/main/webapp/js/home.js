@@ -13,9 +13,6 @@ window.addEventListener("DOMContentLoaded", slidePromotion);
 window.addEventListener("DOMContentLoaded", controlBtnShowmore(countPage));
 window.addEventListener("DOMContentLoaded", sendAjax(0, '0'));
 
-const btnTop = document.querySelector("#btn-top");
-btnTop.addEventListener("click", goTop);
-
 // 카테고리 탭 클릭
 const tabMenu = document.querySelector("#tab-menu");
 tabMenu.addEventListener("click", function(evt) {
@@ -26,11 +23,13 @@ tabMenu.addEventListener("click", function(evt) {
 // 상품 상세 페이지로 이동
 var tabContentContainer = document.querySelector("#tab-content-container");
 tabContentContainer.addEventListener("click", function(evt) {
-	locateProductPage(evt.target.closest(".tab-content").getAttribute("data-value"));
+	var id = evt.target.closest(".tab-content").getAttribute("id");
+	var displayInfoId = evt.target.closest(".tab-content").getAttribute("data-value");
+	locateProductPage(id, displayInfoId);
 });
 
-function locateProductPage(id) {
-	location = "product?id=" + id;
+function locateProductPage(id, displayInfoId) {
+	location = "product?id=" + id + "&displayInfoId=" + displayInfoId;
 }
 
 //AJAX
@@ -183,10 +182,5 @@ function controlBtnShowmore(countPage) {
 	if (countPage >= 2) {
 		btnShowmore[countPage - 2].style.display = "none";
 	}
-}
-
-// scrollTop = 0 으로 위로 돌아가기
-function goTop() {
-	document.documentElement.scrollTop = 0;
 }
 

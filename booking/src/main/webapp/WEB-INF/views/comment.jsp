@@ -6,32 +6,34 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet" href="css/frame.css?re" />
+<link rel="stylesheet" href="css/frame.css?ver=1" />
 <style>
 
 	a {
 		text-decoration: none;
-		color: #4c4c4c;
+		color: #4c4c4c;	
 	}
-	nav {
+	
+	#lnb {
 		height: 50px;
 		background: white;
 		display: flex;
 		position: relative;
 	}
 	
-	nav > div {
+	#lnb > nav, #lnb > div {
 		line-height: 50px;
 		text-align: center;
 	}
 	
-	nav > div:nth-child(1) {
+	#lnb > nav {
 		position: absolute;
 		top: 0;
 		left: 0;
 		width: 50px;
 	}
-	nav > div:nth-child(2) {
+	
+	#lnb > div {
 		flex-grow: 1;
 	}
 	
@@ -100,15 +102,24 @@
 		font-size: 13px;
 	}
 	
+	#no-comment-container {
+		display: none;
+		text-align: center;
+		padding-top: 100px;
+	}
+	
+	#no-comment-container > div {
+		color: #4c4c4c;
+	}
 </style>
 </head>
 <body>
 	<div id="viewport" data-value="${param.id}">
 		<!-- 뒤로가기 -->
-		<nav>
-			<div><a href="javascript:history.back();">«</a></div>
+		<header id="lnb">
+			<nav><a href="javascript:history.back();">«</a></nav>
 			<div>회사이름</div>
-		</nav>
+		</header>
 		
 		<!-- 본문 -->
 		<section id="comment-container">
@@ -128,7 +139,9 @@
 					<span id="comment-count" style="color:#5ECB6B"></span>&nbsp;등록
 				</div>
 			</article>
-			
+			<article id="no-comment-container">
+				<div>아직 등록된 한줄평이 없습니다.</div>
+			</article>
 			<script type="text/template" id="template-comment">
 				<article class="comment-container">
 					<div class="comment">
@@ -153,7 +166,7 @@
 	
 	<!-- handlebar library 다운로드 -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.5.3/handlebars.min.js" integrity="sha256-GwjGuGudzIwyNtTEBZuBYYPDvNlSMSKEDwECr6x6H9c=" crossorigin="anonymous"></script>
-	
+	<script src="js/getParams.js"></script>
 	<script>
 		// Handlebars.registerHelper
 		Handlebars.registerHelper("file", function(saveFileName) {
@@ -182,16 +195,17 @@
 		
 		const templateComment = document.querySelector("#template-comment").innerHTML;
 		
-		const id = document.querySelector("#viewport").getAttribute("data-value");
-		window.addEventListener("DOMContentLoaded", sendAjax(id));
+		// getParams.js 에 의존		
+// 		const id = document.querySelector("#viewport").getAttribute("data-value");
+		window.addEventListener("DOMContentLoaded", sendAjax(id, displayInfoId));
 		
-		function sendAjax(id) {
+		function sendAjax(id, displayInfoId) {
 			var oReq = new XMLHttpRequest();
 			oReq.addEventListener("load", function() {
 				var jsonObj = JSON.parse(this.responseText);
 				sendJson(jsonObj);
 			});
-			oReq.open("GET", "./json/comment?id=" + id);
+			oReq.open("GET", "./json/comment?id=" + id + "&displayInfoId=" + displayInfoId);
 			oReq.send();
 		}
 		
@@ -210,32 +224,37 @@
 		}
 		
 		function getAvg(avg) {
+			if (avg === null) {
+				avg = 0;
+			}
 			// 별점 구현 일단 대충 ..
 			var star = document.querySelectorAll(".star");
 			for (var j = 0; j < star.length; j++) {
-				if (avg <= (j + 1)) {
+				if (avg <= (j + 1) && avg > j) {
 					for (var i = 0; i < j; i++) {
 						star[i].style.color = "orange";									
 					}
 				}				
 			}
-
-			if (avg === null) {
-				avg = "0.0";
-			}
 			var scoreAvg = document.querySelector("#score-avg");
-			scoreAvg.innerHTML = avg.toFixed(1) + "";
+			scoreAvg.innerHTML = avg.toFixed(1) + "";				
 		}
-		
+		// ??
 		function getComments(listComment) {
-			var bindTemplate = Handlebars.compile(templateComment);
-			var resultHTML = "";
-			listComment.forEach(function(comment) {
-				var resultTpl = bindTemplate(comment);
-				resultHTML += resultTpl;
-			});
-			
-			document.querySelector("#comment-container").insertAdjacentHTML("beforeend", resultHTML);			
+			if (listComment.length === 0) {
+				var noCommentContainer = document.querySelector("#no-comment-container");
+				noCommentContainer.style.display = "block";
+				noCommentContainer.style.height = window.innerHeight + "px";				
+			}
+			else {
+				var bindTemplate = Handlebars.compile(templateComment);
+				var resultHTML = "";
+				listComment.forEach(function(comment) {
+					var resultTpl = bindTemplate(comment);
+					resultHTML += resultTpl;
+				});				
+				document.querySelector("#comment-container").insertAdjacentHTML("beforeend", resultHTML);				
+			}
 		}
 		
 	</script>

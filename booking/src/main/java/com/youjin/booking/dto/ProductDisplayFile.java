@@ -4,6 +4,8 @@ public class ProductDisplayFile {
 	private int id;
 	private String description;
 	private String content;
+	// display_info.id
+	private String displayInfoId;
 	private String placeName;
 	private String saveFileName;
 	private String categoryName;
@@ -11,9 +13,15 @@ public class ProductDisplayFile {
 	private String placeStreet;
 	private String placeLot;
 	private String tel;
-	
-	
-	
+
+	public String getDisplayInfoId() {
+		return displayInfoId;
+	}
+
+	public void setDisplayInfoId(String displayInfoId) {
+		this.displayInfoId = displayInfoId;
+	}
+
 	public String getPlaceStreet() {
 		return placeStreet;
 	}
@@ -93,7 +101,5 @@ public class ProductDisplayFile {
 	public void setSaveFileName(String saveFileName) {
 		this.saveFileName = saveFileName;
 	}
-
-
 
 }

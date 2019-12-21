@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet" href="css/frame.css?re" />
+<link rel="stylesheet" href="css/frame.css?ver=1" />
 <link rel="stylesheet" href="css/home.css?re" />
 </head>
 <body>
@@ -41,7 +41,7 @@
 			<article id="content-left"></article>
 			<article id="content-right"></article>
 			<script type="text/template" id="template-tabcontent">
-					<div class="tab-content" data-value="{{id}}">
+					<div class="tab-content" id="{{id}}" data-value="{{displayInfoId}}">
 						<img src="{{saveFileName}}" alt="no image" />
 						<br />
 						<h3>{{description}}</h3>
@@ -73,5 +73,6 @@
 	<!-- handlebar library 다운로드 -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.5.3/handlebars.min.js" integrity="sha256-GwjGuGudzIwyNtTEBZuBYYPDvNlSMSKEDwECr6x6H9c=" crossorigin="anonymous"></script>
 	<script src="js/home.js"></script>
+	<script src="js/frame.js"></script>
 </body>
 </html>

@@ -85,9 +85,12 @@ public class ProductDao {
 	
 	// 상품별 전시정보 가져오기 
 	// SELECT_DISPLAY_BY_ID
-	public ProductDisplayFile selectDisplayById(Integer id) {
+	// 1개의 상품에 대해 전시정보가 여러개일 수 있다 ..!
+	// queryForObject 는 결과값이 1개여야한다 !
+	public ProductDisplayFile selectDisplayById(Integer id, Integer displayInfoId) {
 		Map<String, Integer> paramMap = new HashMap<>();
 		paramMap.put("id", id);
+		paramMap.put("displayInfoId", displayInfoId);
 		
 		return template.queryForObject(SELECT_DISPLAY_BY_ID, paramMap, rowMapper);	
 	}

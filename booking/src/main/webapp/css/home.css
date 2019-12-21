@@ -108,30 +108,3 @@
 	width: 570px;
 	margin: 5px auto;
 }
-
-#btn-top {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	background: none;
-	border: none;
-	font-size: 15px;
-	color: darkgrey;
-	cursor: pointer;
-	height: 50px;
-	width: 570px;
-	margin: 5px auto;
-}
-
-footer {
-	padding: 20px;
-	text-align: center;
-	line-height: 20px;
-	font-size: 15px;
-	color: grey;
-}
-
-.copyright, .infoPolicy {
-	color: #5d5d5d;
-	font-weight: 600;
-}

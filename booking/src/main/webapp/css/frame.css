@@ -7,6 +7,10 @@
 	src: url('/booking/font/NanumGothicRegular.woff') format('woff')
 }
 
+a {
+	text-decoration: none;
+}
+
 body, header, section, div {
 	font-family: NanumGothicWebR;
 }
@@ -24,7 +28,7 @@ body {
 
 #gnb {
 	height: 50px;
-	background: #5ECB6B;	
+	background: #5ECB6B;
 }
 
 #gnb>div {
@@ -42,4 +46,31 @@ body {
 #user-email {
 	float: right;
 	margin-right: 20px;
+}
+
+#btn-top {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: none;
+	border: none;
+	font-size: 15px;
+	color: darkgrey;
+	cursor: pointer;
+	height: 50px;
+	width: 570px;
+	margin: 5px auto;
+}
+
+footer {
+	padding: 20px;
+	text-align: center;
+	line-height: 20px;
+	font-size: 15px;
+	color: grey;
+}
+
+.copyright, .infoPolicy {
+	color: #5d5d5d;
+	font-weight: 600;
 }
