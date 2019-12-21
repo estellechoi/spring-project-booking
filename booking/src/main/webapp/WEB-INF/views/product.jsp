@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="stylesheet" href="css/frame.css?ver=3" />
-<link rel="stylesheet" href="css/product.css" />
+<link rel="stylesheet" href="css/product.css?ver=33" />
 </head>
 <body>
 	<div id="viewport">
@@ -24,10 +24,16 @@
 				</script>
 			</div>
 			<div id="title">
+				<div id="count-slideImgs">
+					<span id="current-count" style="color: white">1</span>
+					<span id="total-count" style="color: grey">/&nbsp;&nbsp;5</span>				
+				</div>
+				
 				<div id="btn-slideImgs">
 					<span id="btn-left">«</span>
 					<span id="btn-right">»</span>
 				</div>
+				
 				<script type="text/template" id="template-title">
 					<div id="description">{{description}}</div>
 				</script>
@@ -43,7 +49,7 @@
 		<input id="btn-unfold" type="button" value="펼쳐보기 ∨" />
 		
 		<section id="event-container">
-			<div>이벤트 정보</div>
+			<div><span style="color:red">ღ</span>&nbsp;이벤트 정보</div>
 			<script type="text/template" id="template-event">
 				<div id="event">
 					{{#events event}}
