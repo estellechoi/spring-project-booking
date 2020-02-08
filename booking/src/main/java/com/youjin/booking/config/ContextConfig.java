@@ -3,6 +3,8 @@ package com.youjin.booking.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -46,4 +48,12 @@ public class ContextConfig extends WebMvcConfigurerAdapter {
 		return resolver;
 	}
 
+	// MultipartResolver 등록 
+	@Bean
+	public MultipartResolver multipartResolver() {
+		// commons-fileupload 라이브러리에 의존
+		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+		multipartResolver.setMaxUploadSize(1024 * 1024 * 10);
+		return multipartResolver;
+	}
 }
