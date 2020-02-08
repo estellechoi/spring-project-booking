@@ -1,10 +1,14 @@
 package com.youjin.booking.controller;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.youjin.booking.dto.Category;
+import com.youjin.booking.dto.Price;
 import com.youjin.booking.dto.ProductDisplayFile;
 import com.youjin.booking.dto.Promotion;
+import com.youjin.booking.dto.ReservationInfoPrice;
 import com.youjin.booking.dto.ReservationUserComment;
 import com.youjin.booking.service.CategoryService;
 import com.youjin.booking.service.ProductService;
@@ -116,5 +122,51 @@ public class HomeRestController {
 		map.put("listComment", listComment);
 		
 		return map;	
+	}
+	
+	@GetMapping(path = "/book")
+	public Map<String, Object> book(@RequestParam(name = "id") int id,
+									@RequestParam(name = "displayInfoId") int displayInfoId) {
+		Map<String, Object> map = new HashMap<>();
+		List<Price> listPrice = productService.getPriceById(id);
+		List<ProductDisplayFile> listImage = productService.getProductImageById(id);
+		ProductDisplayFile displayInfo = productService.getDisplayInfoById(id, displayInfoId);
+		
+		// 예매일 랜덤 생성 (오늘포함해서 1-5일 랜덤값)
+		int days = (int) (Math.random() * 5) + 1; // 1 ~ 5 랜덤값
+
+		Calendar cal = Calendar.getInstance();		
+		cal.add(Calendar.DAY_OF_MONTH, days); // 날짜 이동
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
+		String reservationDate = sdf.format(cal.getTime());
+		
+		System.out.println(sdf.format(cal.getTime())); // 예약 날짜 
+		
+		map.put("listPrice", listPrice);
+		map.put("listImage", listImage);
+		map.put("displayInfo", displayInfo);
+		map.put("reservationDate", reservationDate);
+		return map;
+	}
+	
+	@GetMapping(path = "/my_reservation")
+	public Map<String, Object> myReservation(HttpSession session) {
+		
+		System.out.println("REST Controller 메소드 호출");
+		Map<String, Object> map = new HashMap<>();
+		
+		// 이메일로 예약정보 조회하기
+		List<ReservationUserComment> listReservation = reservationUserCommentService.getReservationInfo(session.getAttribute("reservationEmail").toString());
+		
+		// listReservation의 각 객체마다 타입별 수량,가격 정보 (리스트)를 주입하기 (reservationInfoId 별 조회)
+		for (ReservationUserComment reservation: listReservation) {
+			int reservationInfoId = reservation.getReservationInfoId();
+			List<ReservationInfoPrice> listPrice = reservationUserCommentService.getReservationPrice(reservationInfoId);
+			reservation.setReservationInfoPrice(listPrice);
+		}
+		
+		map.put("listReservation", listReservation);
+		
+		return map;
 	}
 }
