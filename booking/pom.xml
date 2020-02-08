@@ -16,6 +16,25 @@
 	</properties>
 
 	<dependencies>
+		<!-- multipart 파일 업로드 관련 -->
+		<!-- HttpServletRequest는 웹 클라이언트가 전달하는 Multipart데이터를 쉽게 처리하는 메소드를 제공하지 
+			않습니다. 서블릿에서 파일 업로드를 처리하려면 별도의 라이브러리를 사용해야 한다. -->
+		<!-- commons-fileupload -->
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.4</version>
+		</dependency>
+
+		<!-- commons-io -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.6</version>
+		</dependency>
+
+
+
 		<!-- spring-context -->
 		<dependency>
 			<groupId>org.springframework</groupId>
