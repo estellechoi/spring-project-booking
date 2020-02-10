@@ -6,16 +6,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet" href="css/frame.css?ver=1" />
 <link rel="stylesheet" href="css/home.css?re" />
 </head>
 <body>
 	<div id="viewport">
 		<!-- gnb : global navigation bar -->
-		<header id="gnb">
-			<div id="logo">예약</div>
-			<div id="user-email">eeee@naver.com</div>
-		</header>
+		<%@ include file="header.jsp" %>
 		
 		<section id="promotion-container">
 			<div id="promotion" style="left:0px">
@@ -56,23 +52,12 @@
 				<input class="btn-showmore" type="button" value="더보기" onclick="sendAjax({pageStartIndex}, '{categoryId}')"/>		
 			</script>
 		</div>
-		
-		<input id="btn-top" type="button" value="↑ TOP" />
-		
-		<footer>
-	    	<p>네이버(주)는 통신판매의 당사자가 아니며, 상품의정보, 거래조건, 이용 및 환불 등과 관련한 의무와 책임은 각 회원에게 있습니다.</p>
-	      	<p class="copyright">(주)네이버 사업자정보 </p>
-	      	<span>이용약관 | </span>
-	      	<span class="infoPolicy">개인정보처리방침 |</span>
-	      	<span> 네이버 예약 고객센터</span>
-	      	<p>ⓒ NAVER Corp.</p>
-	    </footer>
+		<%@ include file="footer.jsp" %>
 	</div>
 	
 	<!-- javascript -->
 	<!-- handlebar library 다운로드 -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.5.3/handlebars.min.js" integrity="sha256-GwjGuGudzIwyNtTEBZuBYYPDvNlSMSKEDwECr6x6H9c=" crossorigin="anonymous"></script>
 	<script src="js/home.js"></script>
-	<script src="js/frame.js"></script>
 </body>
 </html>
