@@ -14,7 +14,7 @@
 	transition: all 0.5s ease-out;
 }
 
-#background>img {
+#background > img {
 	display: inline-block;
 	/* block 간 여백이 생긴다. -> margin 값을 음수로 */
 	width: 600px;
@@ -31,11 +31,11 @@
 }
 
 #count-slideImgs {
-	margin-top: 50px;
+	margin: 15% auto;
 	width: 50px;
 	padding: 3px;
 	background: black;
-  	opacity: 0.8;
+  	opacity: 0.9;
 	border-radius: 50px;
 	text-align: center;
 }
