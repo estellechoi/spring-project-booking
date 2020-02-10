@@ -28,14 +28,20 @@
 		}
 		
 		function slideImgs(clickedDirection) {
+			// 페이지수 제어
+			var currentCount = document.querySelector("#current-count");
+			var current = parseInt(currentCount.innerText);
+			// 슬라이드 이미지 제어
 			var background = document.querySelector("#background");
 			var pre = parseInt(background.style.left);
 			if (clickedDirection === "btn-left") {
 				background.style.left = (pre + 600) + "px";
+				currentCount.innerText = (current - 1) + "";
 			}
 			else {
 				background.style.left = (pre - 600) + "px";
-			}
+				currentCount.innerText = (current + 1) + "";
+			}			
 		}
 				
 		// 상세정보/오시는길 tab ui
@@ -89,7 +95,7 @@
 		}
 
 		function getImgsTempl(listImage) {
-			setBtnSlideImgs(listImage.length);			
+			setPageSlideImgs(listImage.length);			
 			setBackgroundWidth(listImage.length);
 			// 이미지 넣기
 			var bindTemplate = Handlebars.compile(templateImgs);
@@ -103,12 +109,15 @@
 			background.innerHTML = resultHTML;			
 		}
 		
-		function setBtnSlideImgs(length) {
-			var btnSlideImgs = document.querySelector("#btn-slideImgs");
+		function setPageSlideImgs(length) {
+			const btnSlideImgs = document.querySelector("#btn-slideImgs");
 			if (length < 2) {
 				btnSlideImgs.style.display = "none";
 			}
+			const totalCount = document.querySelector("#total-count");
+			totalCount.innerText = length + "";
 		}
+		
 		function setBackgroundWidth(length) {
 			var background = document.querySelector("#background");
 			background.style.minWidth = (length * 600) + "px";
