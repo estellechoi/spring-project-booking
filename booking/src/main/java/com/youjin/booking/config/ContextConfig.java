@@ -7,10 +7,13 @@ import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+
+import com.youjin.booking.interceptor.LogInterceptor;
 
 @Configuration
 @EnableWebMvc // MVC 모델의 기본 핸들러들을 생성하고 기본 설정해준다.
@@ -56,4 +59,14 @@ public class ContextConfig extends WebMvcConfigurerAdapter {
 		multipartResolver.setMaxUploadSize(1024 * 1024 * 10);
 		return multipartResolver;
 	}
+
+	// Interceptor 등록
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		
+		//InterceptorRegistry 객체에 LogInterceptor 객체를 인터셉터로 추가
+		registry.addInterceptor(new LogInterceptor());
+	}
+	
+	
 }
