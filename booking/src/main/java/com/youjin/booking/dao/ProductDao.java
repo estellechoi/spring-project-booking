@@ -2,12 +2,12 @@ package com.youjin.booking.dao;
 
 import static com.youjin.booking.dao.ProductDaoSqls.SELECT_ALL_LIMIT;
 import static com.youjin.booking.dao.ProductDaoSqls.SELECT_BY_CATEGORY;
+import static com.youjin.booking.dao.ProductDaoSqls.SELECT_BY_ID;
 import static com.youjin.booking.dao.ProductDaoSqls.SELECT_COUNT;
 import static com.youjin.booking.dao.ProductDaoSqls.SELECT_COUNT_BY_CATEGORY;
-import static com.youjin.booking.dao.ProductDaoSqls.SELECT_BY_ID;
-import static com.youjin.booking.dao.ProductDaoSqls.SELECT_IMAGE_BY_ID;
 import static com.youjin.booking.dao.ProductDaoSqls.SELECT_DISPLAY_BY_ID;
-
+import static com.youjin.booking.dao.ProductDaoSqls.SELECT_IMAGE_BY_ID;
+import static com.youjin.booking.dao.ProductDaoSqls.SELECT_PRICE_BY_ID;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +20,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.youjin.booking.dto.Price;
 import com.youjin.booking.dto.ProductDisplayFile;
 
 @Repository
@@ -27,6 +28,7 @@ public class ProductDao {
 
 	private NamedParameterJdbcTemplate template;
 	private RowMapper<ProductDisplayFile> rowMapper = BeanPropertyRowMapper.newInstance(ProductDisplayFile.class);
+	private RowMapper<Price> rowMapperPrice = BeanPropertyRowMapper.newInstance(Price.class);
 	
 	public ProductDao(DataSource dataSource) {
 		this.template = new NamedParameterJdbcTemplate(dataSource);		
@@ -93,6 +95,14 @@ public class ProductDao {
 		paramMap.put("displayInfoId", displayInfoId);
 		
 		return template.queryForObject(SELECT_DISPLAY_BY_ID, paramMap, rowMapper);	
+	}
+	
+	// 가격 
+	// SELECT_PRICE_BY_ID
+	public List<Price> selectPriceById(Integer id) {
+		Map<String, Integer> paramMap = new HashMap<>();
+		paramMap.put("id", id);
+		return template.query(SELECT_PRICE_BY_ID, paramMap, rowMapperPrice);
 	}
 	
 }

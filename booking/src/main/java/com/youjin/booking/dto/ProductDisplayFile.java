@@ -1,6 +1,7 @@
 package com.youjin.booking.dto;
 
 public class ProductDisplayFile {
+	// product
 	private int id;
 	private String description;
 	private String content;
@@ -13,6 +14,17 @@ public class ProductDisplayFile {
 	private String placeStreet;
 	private String placeLot;
 	private String tel;
+	private String openingHours;
+	
+	
+
+	public String getOpeningHours() {
+		return openingHours;
+	}
+
+	public void setOpeningHours(String openingHours) {
+		this.openingHours = openingHours;
+	}
 
 	public String getDisplayInfoId() {
 		return displayInfoId;

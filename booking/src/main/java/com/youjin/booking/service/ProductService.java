@@ -2,6 +2,7 @@ package com.youjin.booking.service;
 
 import java.util.List;
 
+import com.youjin.booking.dto.Price;
 import com.youjin.booking.dto.ProductDisplayFile;
 
 public interface ProductService {
@@ -15,4 +16,5 @@ public interface ProductService {
 	public ProductDisplayFile getProductById(Integer id);
 	public List<ProductDisplayFile> getProductImageById(Integer id);
 	public ProductDisplayFile getDisplayInfoById(Integer id, int displayInfoId);
+	public List<Price> getPriceById(Integer id);
 }

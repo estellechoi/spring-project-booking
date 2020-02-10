@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.youjin.booking.dao.ProductDao;
+import com.youjin.booking.dto.Price;
 import com.youjin.booking.dto.ProductDisplayFile;
 import com.youjin.booking.service.ProductService;
 
@@ -58,6 +59,13 @@ public class ProductServiceImpl implements ProductService {
 		ProductDisplayFile displayInfo = productDao.selectDisplayById(id, displayInfoId);
 		return displayInfo;
 	}
+
+	@Override
+	public List<Price> getPriceById(Integer id) {
+		List<Price> list = productDao.selectPriceById(id);
+		return list;
+	}
+	
 	
 	
 	
