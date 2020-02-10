@@ -6,16 +6,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet" href="css/frame.css?ver=3" />
-<link rel="stylesheet" href="css/product.css?ver=33" />
+<link rel="stylesheet" href="css/product.css?ver=37" />
 </head>
 <body>
 	<div id="viewport">
 		<!-- gnb : global navigation bar -->
-		<header id="gnb">
-			<div id="logo">예약</div>
-			<div id="user-email">eeee@naver.com</div>
-		</header>
+		<%@ include file="header.jsp" %>
 		
 		<div id="title-container">
 			<div id="background" style="left: 0">
@@ -26,7 +22,8 @@
 			<div id="title">
 				<div id="count-slideImgs">
 					<span id="current-count" style="color: white">1</span>
-					<span id="total-count" style="color: grey">/&nbsp;&nbsp;5</span>				
+					<span style="color: grey">/</span>
+					<span id="total-count" style="color: grey">5</span>				
 				</div>
 				
 				<div id="btn-slideImgs">
@@ -60,7 +57,7 @@
 		</section>
 		
 		<nav id="btn-reservation">
-			<a href="#">예매하기</a>
+			<a href="book?id=${param.id}&displayInfoId=${param.displayInfoId}">예매하기</a>
 		</nav>
 		
 		<!-- jsp import 로 수정 ? -->
@@ -135,6 +132,6 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.5.3/handlebars.min.js" integrity="sha256-GwjGuGudzIwyNtTEBZuBYYPDvNlSMSKEDwECr6x6H9c=" crossorigin="anonymous"></script>
 	<script src="js/getParams.js"></script>
 	<script src="js/frame.js"></script>
-	<script src="js/product.js"></script>
+	<script src="js/product.js?re"></script>
 </body>
 </html>
