@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- classpath 경로에 logback.xml이 있는지 확인하고 있으면 그것을 logback 설정으로 사용 -->
+<configuration scan="true" scanPeriod="30 seconds">
+
+	<!-- ConsoleAppender (콘솔 출력 로그 설정)-->
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<!-- 인코딩 및 출력 -->
+		<encoder>
+			<!-- 출력 포맷 설정 -->
+			<Pattern>%d{HH:mm} %-5level %logger{36} - %msg%n</Pattern>
+		</encoder>
+	</appender>
+	
+	
+	<!-- RollingFileAppender (하루 단위로 로그 파일을 백업/관리 설정) -->
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- 로그 파일 저장경로 -->
+		<file>/Users/youjin/tmp/bookingRequest.log</file>
+
+		<!-- 인코딩 및 출력 -->
+		<encoder>
+            <Pattern>%d{HH:mm} %-5level %logger{36} - %msg%n</Pattern>
+        </encoder>
+
+		<!-- rollingPolicy -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>/Users/youjin/tmp/bookingRequest-%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+	</appender>
+	
+	
+	<!-- 특정 패키지 하의 클래스들에 대해 특정 레벨 이상의 로그를 기록하게 한다. -->
+	<logger name="com.youjin.booking" level="info"/>
+
+
+	<!-- 특정 로그 레벨에 appender 를 적용시킨다. -->
+	<root level="info">
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="FILE"/>
+	</root>
+	
+</configuration>
