@@ -33,13 +33,41 @@
 			<version>2.6</version>
 		</dependency>
 
+		<!-- 로깅 관련 -->
+		<!-- slf4j-api -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.25</version>
+		</dependency>
 
+		<!-- logback-classic -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.3</version>
+			<!-- <scope>test</scope> -->
+		</dependency>
+
+		<!-- jcl-over-slf4j (스프링이 기본으로 찾는 commons-loggig 대신 구조가 같은 jcl-slf4j 의존성 추가)-->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>1.7.25</version>
+		</dependency>
 
 		<!-- spring-context -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 			<version>${org.springframework-version}</version>
+			<!-- 스프링이 기본으로 찾게되는 commons-loggig 을 제외시킨다. -->
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- spring-webmvc -->
