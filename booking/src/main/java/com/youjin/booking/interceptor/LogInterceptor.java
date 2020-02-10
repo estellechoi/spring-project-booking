@@ -18,6 +18,7 @@ public class LogInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		
+		System.out.println("Controller 실행 전");
 		// 요청받은 시간 구하기 (현재 시간)
 		long currentTime = System.currentTimeMillis();
 		request.setAttribute("requestTime", currentTime);
@@ -32,6 +33,13 @@ public class LogInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
+		System.out.println("Controller 실행 전");
+		// 요청받은 시간 구하기 (현재 시간)
+		long currentTime = System.currentTimeMillis();
+		long preTime = (Long) request.getAttribute("requestTime");
+		long processedTime = currentTime - preTime;
+		// info(); 진행상황 같은 일반 정보
+		logger.info("요청 URL : {} / 시간 : {} / 클라이언트 IP : {}", request.getRequestURL(), processedTime, request.getRemoteAddr());
 		
 	}
 	
